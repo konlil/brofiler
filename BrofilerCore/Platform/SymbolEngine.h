@@ -35,7 +35,11 @@ namespace Brofiler
 
 		virtual ~SymbolEngine() {};
 
+#if MT_PLATFORM_WINDOWS
+        static SymbolEngine* Get();
+#else
         static SymbolEngine* Get() { return nullptr; };  //TODO:
+#endif
 
 	protected:
 

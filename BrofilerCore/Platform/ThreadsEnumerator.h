@@ -11,7 +11,11 @@ namespace Brofiler
 
 		ThreadIdExt(uint32 _id)
 		{
+#if MT_PLATFORM_WINDOWS
+			id = _id;
+#else
 			id = (pthread_t)_id;    //TODO: 
+#endif
 			isInitialized.Store(1);
 		}
 

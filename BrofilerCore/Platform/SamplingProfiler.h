@@ -85,7 +85,11 @@ namespace Brofiler
 		virtual ~SamplingProfiler() {};
 		virtual OutputDataStream& Serialize(OutputDataStream& stream);
 
+#if MT_PLATFORM_WINDOWS
+		static SamplingProfiler* Get();
+#else
         static SamplingProfiler* Get() {return nullptr;}  //TODO:
+#endif
 
 
 	protected:

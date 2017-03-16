@@ -23,6 +23,10 @@ namespace Brofiler
 		virtual bool Stop();
 
 		virtual ~SchedulerTrace() {};
+#if MT_PLATFORM_WINDOWS
+        static SchedulerTrace* Get(); 
+#else
         static SchedulerTrace* Get() { return nullptr; } //TODO: 
+#endif
 	};
 }
