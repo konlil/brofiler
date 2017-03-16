@@ -1,6 +1,7 @@
 Bin/
 Brofiler/obj/
 Build/
+MyBuild/
 *.suo
 *.user
 Publish/
