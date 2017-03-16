@@ -66,6 +66,7 @@ namespace MT
 
 	class ThreadId
 	{
+    protected:
 		pthread_t id;
 		Atomic32<uint32> isInitialized;
 
@@ -313,8 +314,10 @@ namespace MT
 #ifdef MT_INSTRUMENTED_BUILD
 		static void SetThreadName(const char* threadName)
 		{
+#ifdef _GNU_SOURCE
 			pthread_t callThread = pthread_self();
 			pthread_setname_np(callThread, threadName);
+#endif
 		}
 #endif
 

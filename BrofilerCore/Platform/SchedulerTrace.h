@@ -23,6 +23,6 @@ namespace Brofiler
 		virtual bool Stop();
 
 		virtual ~SchedulerTrace() {};
-		static SchedulerTrace* Get();
+        static SchedulerTrace* Get() { return nullptr; } //TODO: 
 	};
 }

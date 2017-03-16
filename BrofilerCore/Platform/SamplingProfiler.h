@@ -14,7 +14,7 @@ namespace Brofiler
 		uint64 dwArddress;
 		uint32 invokeCount;
 
-		std::list<CallStackTreeNode> children;
+		std::vector<CallStackTreeNode> children;
 
 		CallStackTreeNode() : dwArddress(0), invokeCount(0)
 		{
@@ -85,12 +85,12 @@ namespace Brofiler
 		virtual ~SamplingProfiler() {};
 		virtual OutputDataStream& Serialize(OutputDataStream& stream);
 
-		static SamplingProfiler* Get();
+        static SamplingProfiler* Get() {return nullptr;}  //TODO:
 
 
 	protected:
 
-		std::list<CallStack> callstacks;
+		std::vector<CallStack> callstacks;
 
 	};
 

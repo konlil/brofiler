@@ -26,6 +26,8 @@ namespace MT
 
 	void Diagnostic::ReportAssert(const char*, const char*, const char*, int)
 	{
+#ifdef _WIN32
 		__debugbreak();
+#endif
 	}
 }

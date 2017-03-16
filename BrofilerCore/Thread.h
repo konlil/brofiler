@@ -1,4 +1,7 @@
 #pragma once
+
+#if 0
+
 #include "Common.h"
 
 namespace Brofiler
@@ -32,4 +35,6 @@ BRO_INLINE const void* GetThreadUniqueID()
 
 
 }
+
+#endif
 

@@ -35,7 +35,7 @@ namespace Brofiler
 
 		virtual ~SymbolEngine() {};
 
-		static SymbolEngine* Get();
+        static SymbolEngine* Get() { return nullptr; };  //TODO:
 
 	protected:
 

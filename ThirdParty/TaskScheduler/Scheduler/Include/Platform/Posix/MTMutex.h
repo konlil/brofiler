@@ -26,7 +26,7 @@
 #define __MT_MUTEX__
 
 #include <pthread.h>
-
+#include <iostream>
 
 namespace MT
 {
@@ -46,6 +46,7 @@ namespace MT
 
 		Mutex()
 		{
+            std::cout<< "---------" << std::endl;
 			int res = pthread_mutexattr_init(&mutexAttr);
 			MT_USED_IN_ASSERT(res);
 			MT_ASSERT(res == 0, "pthread_mutexattr_init - failed");

@@ -1,11 +1,14 @@
 # CMake 最低版本号
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 
 # 配置类型只支持Debug和带调试信息的Release
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 
 # 不生成ZERO CHECK
 set(CMAKE_SUPPRESS_REGENERATION true)
+
+# 使用C++11
+set (CMAKE_CXX_STANDARD 11)
 
 # CMAKE_SOURCE_DIR 内置变量，表示Cmake开始构建时的入口路径
 # CMAKE_MODULE_PATH 

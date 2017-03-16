@@ -11,7 +11,7 @@ namespace Brofiler
 
 		ThreadIdExt(uint32 _id)
 		{
-			id = _id;
+			id = (pthread_t)_id;    //TODO: 
 			isInitialized.Store(1);
 		}
 

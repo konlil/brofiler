@@ -7,7 +7,7 @@
 #if MT_PLATFORM_WINDOWS
 #pragma comment( lib, "ws2_32.lib" )
 #else
-#error Platform is not defined!
+//TODO: #error Platform is not defined!
 #endif
 
 namespace Brofiler
