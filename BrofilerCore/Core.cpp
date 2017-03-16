@@ -202,7 +202,7 @@ void Core::DumpFrames()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::DumpSamplingData()
 {
-	if (samplingProfiler->StopSampling())
+	if (samplingProfiler && samplingProfiler->StopSampling())
 	{
 		DumpProgress("Collecting Sampling Events...");
 
@@ -403,20 +403,24 @@ void Core::Activate( bool active )
 		}
 */
 
-		if (active)
-		{
-			CaptureStatus::Type status = schedulerTrace->Start(SchedulerTrace::ALL, threads, true);
-
-			// Let's retry with more narrow setup
-			if (status != CaptureStatus::OK)
-				status = schedulerTrace->Start(SchedulerTrace::SWITCH_CONTEXTS, threads, true);
-
-			SendHandshakeResponse(status);
-		}
-		else
-		{
-			schedulerTrace->Stop();
-		}
+        if(schedulerTrace)
+        {
+            if (active)
+            {
+                CaptureStatus::Type status = schedulerTrace->Start(SchedulerTrace::ALL, threads, true);
+                
+                // Let's retry with more narrow setup
+                if (status != CaptureStatus::OK)
+                    status = schedulerTrace->Start(SchedulerTrace::SWITCH_CONTEXTS, threads, true);
+                
+                SendHandshakeResponse(status);
+            }
+            else
+            {
+                schedulerTrace->Stop();
+            }
+        }
+		
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -427,7 +431,7 @@ void Core::DumpCapturingProgress()
 	if (isActive)
 		stream << "Capturing Frame " << (uint32)frames.size() << std::endl;
 
-	if (samplingProfiler->IsActive())
+	if (samplingProfiler && samplingProfiler->IsActive())
 		stream << "Sample Count " << (uint32)samplingProfiler->GetCollectedCount() << std::endl;
 
 	DumpProgress(stream.str().c_str());

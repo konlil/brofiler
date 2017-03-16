@@ -160,7 +160,7 @@ void Engine::UpdateLogic()
 void Engine::UpdateTasks()
 {
 	BROFILER_CATEGORY("UpdateTasks", Brofiler::Color::SkyBlue);
-	RootTask<16> task;
+/*	RootTask<16> task;
 	scheduler.RunAsync(MT::TaskGroup::Default(), &task, 1);
 
 	MT::SpinSleepMilliSeconds(1);
@@ -168,7 +168,7 @@ void Engine::UpdateTasks()
 	PriorityTask priorityTasks[128];
 	scheduler.RunAsync(MT::TaskGroup::Default(), &priorityTasks[0], MT_ARRAY_SIZE(priorityTasks));
 
-	scheduler.WaitAll(100000);
+	scheduler.WaitAll(100000);*/
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Engine::UpdateScene()
@@ -399,7 +399,8 @@ MT::IProfilerEventListener* GetProfiler()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Engine::Engine() : scheduler(SCHEDULER_WORKERS_COUNT, nullptr, GetProfiler()), isAlive(true)
+Engine::Engine() : isAlive(true)
+//Engine::Engine() : scheduler(SCHEDULER_WORKERS_COUNT, nullptr, GetProfiler()), isAlive(true)
 {
 	for (size_t i = 0; i < WORKER_THREAD_COUNT; ++i)
 	{

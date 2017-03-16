@@ -15,7 +15,7 @@ namespace Test
 	// Test engine: emulates some hard CPU work.
 	class Engine
 	{
-		MT::TaskScheduler scheduler;
+		//MT::TaskScheduler scheduler;
 
 		static const size_t WORKER_THREAD_COUNT = 2;
 		std::array<MT::Thread, WORKER_THREAD_COUNT> workers;
