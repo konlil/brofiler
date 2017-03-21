@@ -1,13 +1,12 @@
 #pragma once
 
-#include <MTConfig.h>
+#include <Config.h>
 
-#if MT_PLATFORM_WINDOWS
+#if BF_PLATFORM_WINDOWS
 #include <windows.h>
 #endif
 
-#include <MTTypes.h>
-#include <MTPlatform.h>
+#include "Platform/Platform.h"
 
 #include <stdint.h>
 
@@ -20,7 +19,7 @@
 #define BRO_ALIGN_CACHE BRO_ALIGN(BRO_CACHE_LINE_SIZE)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if MT_PLATFORM_WINDOWS
+#if BF_PLATFORM_WINDOWS
 #define IS_DEBUG_PRESENT ::IsDebuggerPresent() == TRUE
 #endif
 

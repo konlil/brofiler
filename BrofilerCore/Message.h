@@ -5,7 +5,7 @@
 namespace Brofiler
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static const uint32 NETWORK_PROTOCOL_VERSION = 12;
+static const uint32_t NETWORK_PROTOCOL_VERSION = 12;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct DataResponse
 {
@@ -21,14 +21,13 @@ struct DataResponse
 		SymbolPack = 7,						// A pack full of resolved Symbols
 		CallstackPack = 8,					// Callstack Pack
 		SyscallPack = 9,					// SysCalls Pack
-		FiberSynchronization = 10,			// FiberSync Data
 	};
 
-	uint32 version;
-	uint32 size;
+	uint32_t version;
+	uint32_t size;
 	Type type;
 
-	DataResponse(Type t, uint32 s) : version(NETWORK_PROTOCOL_VERSION), size(s), type(t) {}
+	DataResponse(Type t, uint32_t s) : version(NETWORK_PROTOCOL_VERSION), size(s), type(t) {}
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream& operator << (OutputDataStream& os, const DataResponse& val);
@@ -55,7 +54,7 @@ class Message : public IMessage
 {
 	enum { id = MESSAGE_TYPE };
 public:
-	static uint32 GetMessageType() { return id; }
+	static uint32_t GetMessageType() { return id; }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct StartMessage : public Message<IMessage::Start>
@@ -72,7 +71,7 @@ struct StopMessage : public Message<IMessage::Stop>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct TurnSamplingMessage : public Message<IMessage::TurnSampling>
 {
-	int32 index;
+	int32_t index;
 	byte isSampling;
 
 	static IMessage* Create(InputDataStream& stream);

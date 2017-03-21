@@ -13,7 +13,7 @@ namespace Brofiler
 
 	OutputDataStream &operator << ( OutputDataStream &stream, const char* val )
 	{
-		uint32 length = val == nullptr ? 0 : (uint32)strlen(val);
+		uint32_t length = val == nullptr ? 0 : (uint32_t)strlen(val);
 		stream << length;
 
 		if (length > 0)
@@ -29,9 +29,9 @@ namespace Brofiler
 		return stream;
 	}
 
-	OutputDataStream &operator << ( OutputDataStream &stream, int64 val )
+	OutputDataStream &operator << ( OutputDataStream &stream, int64_t val )
 	{
-		stream.write( (char*)&val, sizeof(int64) );
+		stream.write( (char*)&val, sizeof(int64_t) );
 		return stream;
 	}
 
@@ -41,7 +41,7 @@ namespace Brofiler
 		return stream;
 	}
 
-	OutputDataStream &operator << (OutputDataStream &stream, int8 val)
+	OutputDataStream &operator << (OutputDataStream &stream, int8_t val)
 	{
 		stream.write((char*)&val, sizeof(val));
 		return stream;
@@ -53,21 +53,21 @@ namespace Brofiler
 		return stream;
 	}
 	
-	OutputDataStream & operator<<(OutputDataStream &stream, uint64 val)
+	OutputDataStream & operator<<(OutputDataStream &stream, uint64_t val)
 	{
-		stream.write( (char*)&val, sizeof(uint64) );
+		stream.write( (char*)&val, sizeof(uint64_t) );
 		return stream;
 	}
 
-	OutputDataStream & operator<<(OutputDataStream &stream, uint32 val)
+	OutputDataStream & operator<<(OutputDataStream &stream, uint32_t val)
 	{
-		stream.write( (char*)&val, sizeof(uint32) );
+		stream.write( (char*)&val, sizeof(uint32_t) );
 		return stream;
 	}
 
 	OutputDataStream & operator<<(OutputDataStream &stream, const std::string& val)
 	{
-		stream << (uint32)val.size();
+		stream << (uint32_t)val.size();
 		if (!val.empty())
 			stream.write(&val[0], sizeof(val[0]) * val.size());
 		return stream;
@@ -76,21 +76,27 @@ namespace Brofiler
 	OutputDataStream & operator<<(OutputDataStream &stream, const std::wstring& val)
 	{
 		size_t count = val.size() * sizeof(wchar_t);
-		stream << (uint32)count;
+		stream << (uint32_t)count;
 		if (!val.empty())
 			stream.write((char*)(&val[0]), count);
 		return stream;
 	}
 
-	InputDataStream &operator >> ( InputDataStream &stream, int32 &val )
+	OutputDataStream & operator<<(OutputDataStream &stream, const std::thread::id& val)
+	{
+		stream << val;
+		return stream;
+	}
+
+	InputDataStream &operator >> ( InputDataStream &stream, int32_t &val )
 	{
 		stream.read( (char*)&val, sizeof(int) );
 		return stream;
 	}
 
-	InputDataStream &operator >> ( InputDataStream &stream, int64 &val )
+	InputDataStream &operator >> ( InputDataStream &stream, int64_t &val )
 	{
-		stream.read( (char*)&val, sizeof(int64) );
+		stream.read( (char*)&val, sizeof(int64_t) );
 		return stream;
 	}
 
@@ -100,15 +106,15 @@ namespace Brofiler
 		return stream;
 	}
 
-	InputDataStream & operator>>( InputDataStream &stream, uint32 &val )
+	InputDataStream & operator>>( InputDataStream &stream, uint32_t &val )
 	{
-		stream.read( (char*)&val, sizeof(uint32) );
+		stream.read( (char*)&val, sizeof(uint32_t) );
 		return stream;
 	}
 
-	InputDataStream & operator>>( InputDataStream &stream, uint64 &val )
+	InputDataStream & operator>>( InputDataStream &stream, uint64_t &val )
 	{
-		stream.read( (char*)&val, sizeof(uint64) );
+		stream.read( (char*)&val, sizeof(uint64_t) );
 		return stream;
 	}
 

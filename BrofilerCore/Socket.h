@@ -3,7 +3,7 @@
 #include <string>
 
 
-#if MT_MSVC_COMPILER_FAMILY
+#if BF_WITH_MSVC
 #pragma warning( push )
 
 //C4127. Conditional expression is constant
@@ -12,7 +12,7 @@
 
 
 
-#if MT_PLATFORM_WINDOWS
+#if BF_PLATFORM_WINDOWS
 #define USE_WINDOWS_SOCKETS (1)
 #else
 #define USE_BERKELEY_SOCKETS (1)
@@ -117,7 +117,7 @@ namespace Brofiler
 
 		fd_set recieveSet;
 
-		MT::Mutex lock;
+		Platform::Mutex lock;
 		std::wstring errorMessage;
 
 		void Close()
@@ -144,7 +144,7 @@ namespace Brofiler
 
 		void Disconnect()
 		{ 
-			MT::ScopedGuard guard(lock);
+			Platform::ScopedGuard guard(lock);
 
 			if (!IsValidSocket(acceptSocket))
 			{
@@ -194,13 +194,13 @@ namespace Brofiler
 			TcpSocket incomingSocket = ::accept(listenSocket, nullptr, nullptr);
 			BRO_ASSERT(IsValidSocket(incomingSocket), "Can't accept socket");
 
-			MT::ScopedGuard guard(lock);
+			Platform::ScopedGuard guard(lock);
 			acceptSocket = incomingSocket;
 		}
 
 		bool Send(const char *buf, size_t len)
 		{
-			MT::ScopedGuard guard(lock);
+			Platform::ScopedGuard guard(lock);
 
 			if (!IsValidSocket(acceptSocket))
 				return false;
@@ -216,7 +216,7 @@ namespace Brofiler
 
 		int Receive(char *buf, int len)
 		{ 
-			MT::ScopedGuard guard(lock);
+			Platform::ScopedGuard guard(lock);
 
 			if (!IsValidSocket(acceptSocket))
 				return 0;
@@ -243,6 +243,6 @@ namespace Brofiler
 }
 
 
-#if MT_MSVC_COMPILER_FAMILY
+#if BF_WITH_MSVC
 #pragma warning( pop )
 #endif

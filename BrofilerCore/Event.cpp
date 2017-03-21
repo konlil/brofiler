@@ -1,17 +1,17 @@
 #include <cstring>
 #include "Event.h"
 #include "Core.h"
-#include "Thread.h"
+#include "Platform/Platform.h"
 #include "EventDescriptionBoard.h"
 
 namespace Brofiler
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static MT::Mutex g_lock;
+static Platform::Mutex g_lock;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EventDescription* EventDescription::Create(const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor /*= Color::Null*/)
 {
-	MT::ScopedGuard guard(g_lock);
+	Platform::ScopedGuard guard(g_lock);
 
 	EventDescription* result = EventDescriptionBoard::Get().CreateDescription();
 	result->name = eventName;
@@ -42,7 +42,7 @@ EventData* Event::Start(const EventDescription& description)
 
 		if (description.isSampling)
 		{
-			storage->isSampling.IncFetch();
+			storage->isSampling.fetch_add(1);
 		}
 	}
 	return result;
@@ -56,29 +56,7 @@ void Event::Stop(EventData& data)
 	{
 		if (EventStorage* storage = Core::storage)
 		{
-			storage->isSampling.DecFetch();
-		}
-	}
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void FiberSyncData::AttachToThread(EventStorage* storage, uint64_t threadId)
-{
-	if (storage)
-	{
-		FiberSyncData& data = storage->fiberSyncBuffer.Add();
-		data.Start();
-		data.finish = LLONG_MAX;
-		data.threadId = threadId;
-	}
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void FiberSyncData::DetachFromThread(EventStorage* storage)
-{
-	if (storage)
-	{
-		if (FiberSyncData* syncData = storage->fiberSyncBuffer.Back())
-		{
-			syncData->Stop();
+			storage->isSampling.fetch_sub(1);
 		}
 	}
 }
@@ -102,11 +80,6 @@ OutputDataStream& operator<<(OutputDataStream& stream, const EventData& ob)
 OutputDataStream& operator<<(OutputDataStream& stream, const SyncData& ob)
 {
 	return stream << (EventTime)(ob) << ob.core << ob.reason << ob.newThreadId;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OutputDataStream& operator<<(OutputDataStream& stream, const FiberSyncData& ob)
-{
-	return stream << (EventTime)(ob) << ob.threadId;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Category::Category(const EventDescription& description) : Event(description)

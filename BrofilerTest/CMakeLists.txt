@@ -5,7 +5,7 @@
 set(SOURCE_FILES TestEngine.cpp TestEngine.h)
 
 # 设置包含路径
-include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/TaskScheduler/Scheduler/include")
+#include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/TaskScheduler/Scheduler/include")
 include_directories("${PROJECT_SOURCE_DIR}/BrofilerCore")
 
 # 生成链接库

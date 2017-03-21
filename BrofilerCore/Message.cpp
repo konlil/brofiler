@@ -10,10 +10,10 @@ namespace Brofiler
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct MessageHeader
 {
-	uint32 mark;
-	uint32 length;
+	uint32_t mark;
+	uint32_t length;
 
-	static const uint32 MESSAGE_MARK = 0xB50FB50F;
+	static const uint32_t MESSAGE_MARK = 0xB50FB50F;
 
 	bool IsValid() const { return mark == MESSAGE_MARK; }
 
@@ -39,7 +39,7 @@ class MessageFactory
 		RegisterMessage<StopMessage>();
 		RegisterMessage<TurnSamplingMessage>();
 
-		for (uint32 msg = 0; msg < IMessage::COUNT; ++msg)
+		for (uint32_t msg = 0; msg < IMessage::COUNT; ++msg)
 		{
 			BRO_ASSERT(factory[msg] != nullptr, "Message is not registered to factory");
 		}
@@ -58,7 +58,7 @@ public:
 
 		size_t length = str.Length();
 
-		int32 messageType = IMessage::COUNT;
+		int32_t messageType = IMessage::COUNT;
 		str >> messageType;
 
 		BRO_VERIFY( 0 <= messageType && messageType < IMessage::COUNT && factory[messageType] != nullptr, "Unknown message type!", return nullptr )
@@ -77,7 +77,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream& operator<<(OutputDataStream& os, const DataResponse& val)
 {
-	return os << val.version << (uint32)val.type;
+	return os << val.version << (uint32_t)val.type;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,11 +107,6 @@ IMessage* IMessage::Create(InputDataStream& str)
 void StartMessage::Apply()
 {
 	Core::Get().Activate(true);
-
-	if (EventDescriptionBoard::Get().HasSamplingEvents())
-	{
-		Core::Get().StartSampling();
-	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IMessage* StartMessage::Create(InputDataStream&)
@@ -125,7 +120,6 @@ void StopMessage::Apply()
 	Core& core = Core::Get();
 	core.Activate(false);
 	core.DumpFrames();
-	core.DumpSamplingData();
 	Server::Get().Send(DataResponse::NullFrame, OutputDataStream::Empty);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -5,9 +5,10 @@
 #include "EventDescriptionBoard.h"
 #include "Thread.h"
 
-#include "Platform/SchedulerTrace.h"
-#include "Platform/SamplingProfiler.h"
-#include "Platform/SymbolEngine.h"
+#include "Platform/Platform.h"
+//#include "Platform/SchedulerTrace.h"
+//#include "Platform/SamplingProfiler.h"
+//#include "Platform/SymbolEngine.h"
 
 
 extern "C" Brofiler::EventData* NextEvent()
@@ -28,14 +29,14 @@ namespace Brofiler
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int64_t GetHighPrecisionTime()
 {
-	return MT::GetHighFrequencyTime();
+	return Platform::TimeMicroSeconds();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::DumpProgress(const char* message)
 {
-	progressReportedLastTimestampMS = MT::GetTimeMilliSeconds();
+	progressReportedLastTimestampMS = Platform::TimeMilliSeconds();
 
 	OutputDataStream stream;
 	stream << message;
@@ -92,26 +93,6 @@ void Core::DumpThread(const ThreadEntry& entry, const EventTime& timeSlice, Scop
 		synchronizationStream << entry.storage.synchronizationBuffer;
 		Server::Get().Send(DataResponse::Synchronization, synchronizationStream);
 	}
-
-	BRO_ASSERT(entry.storage.fiberSyncBuffer.IsEmpty(), "Fiber switch events in native threads?");
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Core::DumpFiber(const FiberEntry& entry, const EventTime& timeSlice, ScopeData& scope)
-{
-	// Events
-	DumpEvents(entry.storage, timeSlice, scope);
-
-	if (!entry.storage.fiberSyncBuffer.IsEmpty())
-	{
-		OutputDataStream fiberSynchronizationStream;
-		fiberSynchronizationStream << scope.header.boardNumber;
-		fiberSynchronizationStream << scope.header.fiberNumber;
-		fiberSynchronizationStream << entry.storage.fiberSyncBuffer;
-		Server::Get().Send(DataResponse::FiberSynchronization, fiberSynchronizationStream);
-	}
-
-	BRO_ASSERT(entry.storage.synchronizationBuffer.IsEmpty(), "Native thread events in fiber?");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,13 +106,13 @@ void Core::DumpFrames()
 	//Graphics::Image image;
 	//graphics.GetScreenshot(image);
 
-	uint32 mainThreadIndex = 0;
+	uint32_t mainThreadIndex = 0;
 
 	for (size_t i = 0; i < threads.size(); ++i)
 	{
-		if (threads[i]->description.threadID.IsEqual(mainThreadID))
+		if (threads[i]->description.threadID == mainThreadID)
 		{
-			mainThreadIndex = (uint32)i;
+			mainThreadIndex = (uint32_t)i;
 		}
 	}
 
@@ -141,89 +122,39 @@ void Core::DumpFrames()
 
 	OutputDataStream boardStream;
 
-	static uint32 boardNumber = 0;
+	static uint32_t boardNumber = 0;
 	boardStream << ++boardNumber;
-	boardStream << MT::GetFrequency();
+	boardStream << Platform::GetFrequency();
 	boardStream << timeSlice;
 	boardStream << threads;
-	boardStream << fibers;
 	boardStream << mainThreadIndex;
 	boardStream << EventDescriptionBoard::Get();
 	Server::Get().Send(DataResponse::FrameDescriptionBoard, boardStream);
 
 	ScopeData threadScope;
-	threadScope.header.boardNumber = (uint32)boardNumber;
-	threadScope.header.fiberNumber = -1;
+	threadScope.header.boardNumber = (uint32_t)boardNumber;
 
 	for (size_t i = 0; i < threads.size(); ++i)
 	{
-		threadScope.header.threadNumber = (uint32)i;
+		threadScope.header.threadNumber = (uint32_t)i;
 		DumpThread(*threads[i], timeSlice, threadScope);
 	}
 
-	ScopeData fiberScope;
-	fiberScope.header.boardNumber = (uint32)boardNumber;
-	fiberScope.header.threadNumber = -1;
-	for (size_t i = 0; i < fibers.size(); ++i)
-	{
-		fiberScope.header.fiberNumber = (uint32)i;
-		DumpFiber(*fibers[i], timeSlice, fiberScope);
-	}
-
 	frames.clear();
-	CleanupThreadsAndFibers();
-
-	{
-		DumpProgress("Serializing SysCalls");
-		OutputDataStream callstacksStream;
-		callstacksStream << boardNumber;
-		syscallCollector.Serialize(callstacksStream);
-		Server::Get().Send(DataResponse::SyscallPack, callstacksStream);
-	}
-
-	if (!callstackCollector.IsEmpty())
-	{
-		DumpProgress("Resolving callstacks");
-		OutputDataStream symbolsStream;
-		symbolsStream << boardNumber;
-		callstackCollector.SerializeSymbols(symbolsStream);
-		Server::Get().Send(DataResponse::SymbolPack, symbolsStream);
-
-		DumpProgress("Serializing callstacks");
-		OutputDataStream callstacksStream;
-		callstacksStream << boardNumber;
-		callstackCollector.SerializeCallstacks(callstacksStream);
-		Server::Get().Send(DataResponse::CallstackPack, callstacksStream);
-	}
-
-
+	CleanupThreads();
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Core::DumpSamplingData()
+void Core::CleanupThreads()
 {
-	if (samplingProfiler && samplingProfiler->StopSampling())
-	{
-		DumpProgress("Collecting Sampling Events...");
-
-		OutputDataStream stream;
-		samplingProfiler->Serialize(stream);
-
-		DumpProgress("Sending Message With Sampling Data...");
-		Server::Get().Send(DataResponse::SamplingFrame, stream);
-	}
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Core::CleanupThreadsAndFibers()
-{
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 
 	for (ThreadList::iterator it = threads.begin(); it != threads.end();)
 	{
 		if (!(*it)->isAlive)
 		{
 			(*it)->~ThreadEntry();
-			MT::Memory::Free(*it);
+			Platform::Memory::Free(*it);
 			it = threads.erase(it);
 		}
 		else
@@ -231,27 +162,16 @@ void Core::CleanupThreadsAndFibers()
 			++it;
 		}
 	}
-
-/*
-	for (FiberList::iterator it = fibers.begin(); it != fibers.end(); ++it)
-	{
-		(*it)->~FiberEntry();
-		MT::Memory::Free(*it);
-	}
-	fibers.clear();
-*/
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Core::Core() : progressReportedLastTimestampMS(0), isActive(false)
 {
-	schedulerTrace = SchedulerTrace::Get();
-	samplingProfiler = SamplingProfiler::Get();
-	symbolEngine = SymbolEngine::Get();
+	mainThreadID = Platform::Thread::CurrentThreadID();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::Update()
 {
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 	
 	if (isActive)
 	{
@@ -273,115 +193,12 @@ void Core::Update()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::UpdateEvents()
 {
-	if (!mainThreadID.IsValid())
-	{
-		mainThreadID = MT::ThreadId::Self();
-	}
-
 	Server::Get().Update();
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Core::ReportSysCall(const SysCallDesc& desc)
-{
-	syscallCollector.Add(desc);
-}
-
 
 #define THREAD_DISABLED_BIT (1)
 #define THREAD_ENABLED_BIT (2)
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-SwitchContextResult Core::ReportSwitchContext(const SwitchContextDesc& desc)
-{
-	if (!schedulerTrace)
-	{
-		return SCR_OTHERPROCESS;
-	}
-
-	int state = 0;
-
-	// finalize work interval
-	auto oldThreadIt = schedulerTrace->activeThreadsIDs.find(desc.oldThreadId);
-	if (oldThreadIt != schedulerTrace->activeThreadsIDs.end())
-	{
-		ThreadEntry* entry = oldThreadIt->second;
-		if (entry)
-		{
-			if (SyncData* time = entry->storage.synchronizationBuffer.Back())
-			{
-				time->finish = desc.timestamp;
-				time->reason = desc.reason;
-				time->newThreadId = desc.newThreadId;
-			}
-			state |= THREAD_DISABLED_BIT;
-
-			// early exit
-			if ((state & THREAD_DISABLED_BIT) != 0 && (state & THREAD_ENABLED_BIT) != 0)
-			{
-				return SCR_INSIDEPROCESS;
-			}
-		}
-	}
-
-	// finalize work interval
-	auto newThreadIt = schedulerTrace->activeThreadsIDs.find(desc.newThreadId);
-	if (newThreadIt != schedulerTrace->activeThreadsIDs.end())
-	{
-		ThreadEntry* entry = newThreadIt->second;
-		if (entry)
-		{
-			SyncData& time = entry->storage.synchronizationBuffer.Add();
-			time.start = desc.timestamp;
-			time.finish = time.start;
-			time.core = desc.cpuId;
-			time.newThreadId = 0;
-
-			state |= THREAD_ENABLED_BIT;
-
-			// early exit
-			if ((state & THREAD_DISABLED_BIT) != 0 && (state & THREAD_ENABLED_BIT) != 0)
-			{
-				return SCR_INSIDEPROCESS;
-			}
-		}
-	}
-
-	if (state == 0)
-	{
-		return SCR_OTHERPROCESS;
-	}
-
-	if ((state & THREAD_DISABLED_BIT) != 0)
-	{
-		return SCR_THREADDISABLED;
-	}
-
-	return SCR_THREADENABLED;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Core::ReportStackWalk(const CallstackDesc& desc)
-{
-	if (!schedulerTrace)
-	{
-		return false;
-	}
-
-	auto it = schedulerTrace->activeThreadsIDs.find(desc.threadID);
-	if (it == schedulerTrace->activeThreadsIDs.end())
-	{
-		return false;
-	}
-
-	callstackCollector.Add(desc);
-	return true;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Core::StartSampling()
-{
-	samplingProfiler->StartSampling(threads);
-}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::Activate( bool active )
 {
@@ -394,33 +211,6 @@ void Core::Activate( bool active )
 			ThreadEntry* entry = *it;
 			entry->Activate(active);
 		}
-
-/*
-		for(auto it = fibers.begin(); it != fibers.end(); ++it)
-		{
-			FiberEntry* entry = *it;
-			entry->Activate(active);
-		}
-*/
-
-        if(schedulerTrace)
-        {
-            if (active)
-            {
-                CaptureStatus::Type status = schedulerTrace->Start(SchedulerTrace::ALL, threads, true);
-                
-                // Let's retry with more narrow setup
-                if (status != CaptureStatus::OK)
-                    status = schedulerTrace->Start(SchedulerTrace::SWITCH_CONTEXTS, threads, true);
-                
-                SendHandshakeResponse(status);
-            }
-            else
-            {
-                schedulerTrace->Stop();
-            }
-        }
-		
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -429,35 +219,32 @@ void Core::DumpCapturingProgress()
 	std::stringstream stream;
 
 	if (isActive)
-		stream << "Capturing Frame " << (uint32)frames.size() << std::endl;
-
-	if (samplingProfiler && samplingProfiler->IsActive())
-		stream << "Sample Count " << (uint32)samplingProfiler->GetCollectedCount() << std::endl;
+		stream << "Capturing Frame " << (uint32_t)frames.size() << std::endl;
 
 	DumpProgress(stream.str().c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Core::IsTimeToReportProgress() const
 {
-	return MT::GetTimeMilliSeconds() > progressReportedLastTimestampMS + 200;
+	return Platform::TimeMilliSeconds() > progressReportedLastTimestampMS + 200;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::SendHandshakeResponse(CaptureStatus::Type status)
 {
 	OutputDataStream stream;
-	stream << (uint32)status;
+	stream << (uint32_t)status;
 	Server::Get().Send(DataResponse::Handshake, stream);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Core::IsRegistredThread(MT::ThreadId id)
+bool Core::IsRegistredThread(THREADID id)
 {
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 	for (ThreadList::iterator it = threads.begin(); it != threads.end(); ++it)
 	{
 		ThreadEntry* entry = *it;
-		if (entry->description.threadID.IsEqual(id))
+		if (entry->description.threadID == id)
 		{
 			return true;
 		}
@@ -469,8 +256,8 @@ bool Core::IsRegistredThread(MT::ThreadId id)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Core::RegisterThread(const ThreadDescription& description, EventStorage** slot)
 {
-	MT::ScopedGuard guard(lock);
-	ThreadEntry* entry = new (MT::Memory::Alloc(sizeof(ThreadEntry), BRO_CACHE_LINE_SIZE)) ThreadEntry(description, slot);
+	Platform::ScopedGuard guard(lock);
+	ThreadEntry* entry = new (Platform::Memory::Alloc(sizeof(ThreadEntry), BRO_CACHE_LINE_SIZE)) ThreadEntry(description, slot);
 	threads.push_back(entry);
 
 	if (isActive && slot != nullptr && *slot != nullptr)
@@ -479,18 +266,18 @@ bool Core::RegisterThread(const ThreadDescription& description, EventStorage** s
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Core::UnRegisterThread(MT::ThreadId threadID)
+bool Core::UnRegisterThread(THREADID threadID)
 {
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 	for (ThreadList::iterator it = threads.begin(); it != threads.end(); ++it)
 	{
 		ThreadEntry* entry = *it;
-		if (entry->description.threadID.IsEqual(threadID) && entry->isAlive)
+		if (entry->description.threadID == threadID && entry->isAlive)
 		{
 			if (!isActive)
 			{
 				entry->~ThreadEntry();
-				MT::Memory::Free(entry);
+				Platform::Memory::Free(entry);
 				threads.erase(it);
 				return true;
 			}
@@ -505,33 +292,16 @@ bool Core::UnRegisterThread(MT::ThreadId threadID)
 	return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Core::RegisterFiber(const FiberDescription& description, EventStorage** slot)
-{
-	MT::ScopedGuard guard(lock);
-	FiberEntry* entry = new (MT::Memory::Alloc(sizeof(FiberEntry), BRO_CACHE_LINE_SIZE)) FiberEntry(description);
-	fibers.push_back(entry);
-	entry->storage.isFiberStorage = true;
-	*slot = &entry->storage;
-	return true;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Core::~Core()
 {
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 
 	for (ThreadList::iterator it = threads.begin(); it != threads.end(); ++it)
 	{
 		(*it)->~ThreadEntry();
-		MT::Memory::Free((*it));
+		Platform::Memory::Free((*it));
 	}
 	threads.clear();
-
-	for (FiberList::iterator it = fibers.begin(); it != fibers.end(); ++it)
-	{
-		(*it)->~FiberEntry();
-		MT::Memory::Free((*it));
-	}
-	fibers.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const std::vector<ThreadEntry*>& Core::GetThreads() const
@@ -539,7 +309,8 @@ const std::vector<ThreadEntry*>& Core::GetThreads() const
 	return threads;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-mt_thread_local EventStorage* Core::storage = nullptr;
+// static TLS for each Thread
+BF_THREAD_LOCAL EventStorage* Core::storage = nullptr;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Core Core::notThreadSafeInstance;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -552,7 +323,7 @@ ScopeHeader::ScopeHeader() : boardNumber(0), threadNumber(0)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream& operator<<(OutputDataStream& stream, const ScopeHeader& header)
 {
-	return stream << header.boardNumber << header.threadNumber << header.fiberNumber << header.event;
+	return stream << header.boardNumber << header.threadNumber << header.event;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream& operator<<(OutputDataStream& stream, const ScopeData& ob)
@@ -562,20 +333,10 @@ OutputDataStream& operator<<(OutputDataStream& stream, const ScopeData& ob)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream& operator<<(OutputDataStream& stream, const ThreadDescription& description)
 {
-	return stream << description.threadID.AsUInt64() << description.name;
+	return stream << description.threadID << description.name;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream& operator<<(OutputDataStream& stream, const ThreadEntry* entry)
-{
-	return stream << entry->description;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OutputDataStream& operator<<(OutputDataStream& stream, const FiberDescription& description)
-{
-	return stream << description.id;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OutputDataStream& operator<<(OutputDataStream& stream, const FiberEntry* entry)
 {
 	return stream << entry->description;
 }
@@ -595,27 +356,17 @@ BROFILER_API EventStorage** GetEventStorageSlotForCurrentThread()
 	return &Core::Get().storage;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BROFILER_API bool IsFiberStorage(EventStorage* fiberStorage)
-{
-	return fiberStorage->isFiberStorage;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool RegisterThread(const char* name)
 {
-	return Core::Get().RegisterThread(ThreadDescription(name, MT::ThreadId::Self(), false), &Core::storage);
+	return Core::Get().RegisterThread(ThreadDescription(name, Platform::Thread::CurrentThreadID(), false), &Core::storage);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool UnRegisterThread()
 {
-	return Core::Get().UnRegisterThread(MT::ThreadId::Self());
+	return Core::Get().UnRegisterThread(Platform::Thread::CurrentThreadID());
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BROFILER_API bool RegisterFiber(uint64 fiberId, EventStorage** slot)
-{
-	return Core::Get().RegisterFiber(FiberDescription(fiberId), slot);
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-EventStorage::EventStorage(): isSampling(0), isFiberStorage(false)
+EventStorage::EventStorage(): isSampling(0)
 {
 	 
 }

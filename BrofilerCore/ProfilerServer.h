@@ -14,11 +14,11 @@ class Server
 	static const int BIFFER_SIZE = 1024;
 	char buffer[BIFFER_SIZE];
 
-	MT::Thread acceptThread;
+	std::thread* acceptThread;
 
 	Socket* socket;
 
-	MT::Mutex lock;
+	Platform::Mutex lock;
 
 	bool isInitialized;
 	

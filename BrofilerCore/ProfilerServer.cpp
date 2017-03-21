@@ -4,7 +4,7 @@
 #include "Socket.h"
 #include "Message.h"
 
-#if MT_PLATFORM_WINDOWS
+#if BF_PLATFORM_WINDOWS
 #pragma comment( lib, "ws2_32.lib" )
 #else
 //TODO: #error Platform is not defined!
@@ -23,7 +23,7 @@ Server::Server(short port) : socket(new Socket()), isInitialized(false)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Server::Update()
 {
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 
 	InitConnection();
 
@@ -42,11 +42,11 @@ void Server::Update()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Server::Send(DataResponse::Type type, OutputDataStream& stream)
 {
-	MT::ScopedGuard guard(lock);
+	Platform::ScopedGuard guard(lock);
 
 	std::string data = stream.GetData();
 
-	DataResponse response(type, (uint32)data.size());
+	DataResponse response(type, (uint32_t)data.size());
 	socket->Send((char*)&response, sizeof(response));
 	socket->Send(data.c_str(), data.size());
 }
@@ -55,7 +55,7 @@ bool Server::InitConnection()
 {
 	if (!isInitialized)
 	{
-		acceptThread.Start(1 * 1024 * 1024, Server::AsyncAccept, this);
+		acceptThread = new std::thread(std::bind(&Server::AsyncAccept, this));
 		isInitialized = true;
 		return true;
 	}
@@ -64,7 +64,10 @@ bool Server::InitConnection()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Server::~Server()
 {
-	acceptThread.Join();
+	if (acceptThread) {
+		acceptThread->join();
+		delete acceptThread;
+	}
 
 	if (socket)
 	{
@@ -91,7 +94,7 @@ void Server::AsyncAccept( void* _server )
 
 	while (server->Accept())
 	{
-		MT::Thread::Sleep(1000);
+		Platform::Sleep(1000);
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

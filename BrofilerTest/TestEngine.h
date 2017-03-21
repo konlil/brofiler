@@ -1,24 +1,15 @@
 #pragma once
 
 #include <array>
-
-
-// Inject brofiler code into the task scope
-#define MT_SCHEDULER_PROFILER_TASK_SCOPE_CODE_INJECTION( TYPE, DEBUG_COLOR, SRC_FILE, SRC_LINE) BROFILER_CATEGORY( MT_TEXT( #TYPE ), DEBUG_COLOR );
-
-
-#include <MTPlatform.h>
-#include <MTScheduler.h>
+#include <thread>
 
 namespace Test
 {
 	// Test engine: emulates some hard CPU work.
 	class Engine
 	{
-		//MT::TaskScheduler scheduler;
-
 		static const size_t WORKER_THREAD_COUNT = 2;
-		std::array<MT::Thread, WORKER_THREAD_COUNT> workers;
+		std::array<std::thread*, WORKER_THREAD_COUNT> workers;
 		bool isAlive;
 
 		void UpdateInput();

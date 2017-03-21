@@ -4,7 +4,7 @@
 #include <sstream>
 #include "MemoryPool.h"
 
-#if MT_MSVC_COMPILER_FAMILY
+#if BF_WITH_MSVC
 #pragma warning( push )
 
 //C4250. inherits 'std::basic_ostream'
@@ -27,20 +27,21 @@ namespace Brofiler
 		// It is important to make private inheritance in order to avoid collision with default operator implementation
 		friend OutputDataStream &operator << ( OutputDataStream &stream, const char* val );
 		friend OutputDataStream &operator << ( OutputDataStream &stream, int val );
-		friend OutputDataStream &operator << ( OutputDataStream &stream, uint64 val );
-		friend OutputDataStream &operator << ( OutputDataStream &stream, uint32 val );
-		friend OutputDataStream &operator << ( OutputDataStream &stream, int64 val );
+		friend OutputDataStream &operator << ( OutputDataStream &stream, uint64_t val );
+		friend OutputDataStream &operator << ( OutputDataStream &stream, uint32_t val );
+		friend OutputDataStream &operator << ( OutputDataStream &stream, int64_t val );
 		friend OutputDataStream &operator << ( OutputDataStream &stream, char val );
 		friend OutputDataStream &operator << ( OutputDataStream &stream, byte val );
-		friend OutputDataStream &operator << (OutputDataStream &stream, int8 val);
+		friend OutputDataStream &operator << (OutputDataStream &stream, int8_t val);
 		friend OutputDataStream &operator << ( OutputDataStream &stream, const std::string& val );
 		friend OutputDataStream &operator << ( OutputDataStream &stream, const std::wstring& val );
+		friend OutputDataStream &operator << (OutputDataStream &stream, const std::thread::id& val);
 	};
 
 	template<class T>
 	OutputDataStream& operator<<(OutputDataStream &stream, const std::vector<T>& val)
 	{
-		stream << (uint32)val.size();
+		stream << (uint32_t)val.size();
 
 		for(auto it = val.begin(); it != val.end(); ++it)
 		{
@@ -51,10 +52,10 @@ namespace Brofiler
 		return stream;
 	}
 
-	template<class T, uint32 N>
+	template<class T, uint32_t N>
 	OutputDataStream& operator<<(OutputDataStream &stream, const MemoryPool<T, N>& val)
 	{
-		stream << (uint32)val.Size();
+		stream << (uint32_t)val.Size();
 
 		val.ForEach([&](const T& data)
 		{
@@ -98,15 +99,15 @@ namespace Brofiler
 		}
 
 		friend InputDataStream &operator >> ( InputDataStream &stream, byte &val );
-		friend InputDataStream &operator >> ( InputDataStream &stream, int32 &val );
-		friend InputDataStream &operator >> ( InputDataStream &stream, uint32 &val );
-		friend InputDataStream &operator >> ( InputDataStream &stream, int64 &val );
-		friend InputDataStream &operator >> ( InputDataStream &stream, uint64 &val );
+		friend InputDataStream &operator >> ( InputDataStream &stream, int32_t &val );
+		friend InputDataStream &operator >> ( InputDataStream &stream, uint32_t &val );
+		friend InputDataStream &operator >> ( InputDataStream &stream, int64_t &val );
+		friend InputDataStream &operator >> ( InputDataStream &stream, uint64_t &val );
 	};
 
 
 }
 
-#if MT_MSVC_COMPILER_FAMILY
+#if BF_WITH_MSVC
 #pragma warning( pop )
 #endif
