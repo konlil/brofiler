@@ -6,7 +6,7 @@
 		void operator= (const TYPE &); \
 	public: \
 
-#define BF_THREAD_LOCAL thread_local
+//#define BF_THREAD_LOCAL thread_local
 
 struct LocalTime
 {

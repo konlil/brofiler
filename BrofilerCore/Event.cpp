@@ -34,16 +34,15 @@ EventData* Event::Start(const EventDescription& description)
 {
 	EventData* result = nullptr;
 
-    EventStorage* storage = Core::storage.get();
-	if (storage)
+	EVENT_STORAGE_PTR_SLOT slot = Core::storage.get();
+	if (slot)
 	{
-		result = &storage->NextEvent();
-		result->description = &description;
-		result->Start();
-
-		if (description.isSampling)
+		EVENT_STORAGE_PTR storage = *slot;
+		if (storage)
 		{
-			storage->isSampling.fetch_add(1);
+			result = &storage->NextEvent();
+			result->description = &description;
+			result->Start();
 		}
 	}
 	return result;
@@ -52,15 +51,6 @@ EventData* Event::Start(const EventDescription& description)
 void Event::Stop(EventData& data)
 {
 	data.Stop();
-
-	if (data.description->isSampling)
-	{
-        EventStorage* storage = Core::storage.get();
-        if (storage)
-		{
-			storage->isSampling.fetch_sub(1);
-		}
-	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OutputDataStream & operator<<(OutputDataStream &stream, const EventDescription &ob)
@@ -88,10 +78,14 @@ Category::Category(const EventDescription& description) : Event(description)
 {
 	if (data)
 	{
-        EventStorage* storage = Core::storage.get();
-        if (storage)
+		EVENT_STORAGE_PTR_SLOT slot = Core::storage.get();
+		if (slot)
 		{
-			storage->RegisterCategory(*data);
+			EVENT_STORAGE_PTR storage = *slot;
+			if (storage)
+			{
+				storage->RegisterCategory(*data);
+			}
 		}
 	}
 }

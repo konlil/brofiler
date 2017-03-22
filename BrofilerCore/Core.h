@@ -89,6 +89,8 @@ struct EventStorage
 		Clear(true);
 	}
 };
+#define EVENT_STORAGE_PTR EventStorage*
+#define EVENT_STORAGE_PTR_SLOT EventStorage**
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct ThreadDescription
 {
@@ -107,11 +109,11 @@ struct ThreadEntry
 {
 	ThreadDescription description;
 	EventStorage storage;
-	EventStorage** threadTLS;
+	EVENT_STORAGE_PTR_SLOT threadTLS;
 
 	bool isAlive;
 
-	ThreadEntry(const ThreadDescription& desc, EventStorage** tls) : description(desc), threadTLS(tls), isAlive(true) {}
+	ThreadEntry(const ThreadDescription& desc, EVENT_STORAGE_PTR_SLOT tls) : description(desc), threadTLS(tls), isAlive(true) {}
 	void Activate(bool isActive);
 };
 
@@ -169,7 +171,7 @@ public:
 
 	// Active Frame (is used as buffer)
 	//static BF_THREAD_LOCAL EventStorage* storage;
-    static Platform::TLSStorage<EventStorage> storage;
+    static Platform::TLSStorage<EVENT_STORAGE_PTR> storage;
 
 	// Resolves symbols
 	SymbolEngine* symbolEngine;

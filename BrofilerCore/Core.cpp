@@ -13,10 +13,10 @@
 
 extern "C" Brofiler::EventData* NextEvent()
 {
-    Brofiler::EventStorage* storage = Brofiler::Core::storage.get();
-	if (storage)
+    Brofiler::EventStorage** slot = Brofiler::Core::storage.get();
+	if (slot)
 	{
-		return &storage->NextEvent();
+		return &(*slot)->NextEvent();
 	}
 
 	return nullptr;
@@ -26,7 +26,7 @@ extern "C" Brofiler::EventData* NextEvent()
 namespace Brofiler
 {
 
-Platform::TLSStorage<EventStorage> Core::storage;
+Platform::TLSStorage<EVENT_STORAGE_PTR> Core::storage;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int64_t GetHighPrecisionTime()
@@ -261,12 +261,11 @@ bool Core::RegisterThread(const ThreadDescription& description)
 {
 	Platform::ScopedGuard guard(lock);
     
-    EventStorage* storage = Core::storage.get();
-    if ( !storage ){
-        storage = Core::storage.alloc(1);
+	EVENT_STORAGE_PTR_SLOT slot = Core::storage.get();
+    if ( slot == NULL){
+        slot = Core::storage.alloc(1);
+		*slot = 0;
     }
-    EventStorage** slot = &storage;
-    
 	ThreadEntry* entry = new (Platform::Memory::Alloc(sizeof(ThreadEntry), BRO_CACHE_LINE_SIZE)) ThreadEntry(description, slot);
 	threads.push_back(entry);
 
