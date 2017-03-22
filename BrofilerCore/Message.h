@@ -39,7 +39,7 @@ public:
 	{
 		Start,
 		Stop,
-		TurnSampling,
+		//TurnSampling,
 		COUNT,
 	};
 
@@ -69,13 +69,13 @@ struct StopMessage : public Message<IMessage::Stop>
 	virtual void Apply() override;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct TurnSamplingMessage : public Message<IMessage::TurnSampling>
-{
-	int32_t index;
-	byte isSampling;
-
-	static IMessage* Create(InputDataStream& stream);
-	virtual void Apply() override;
-};
+//struct TurnSamplingMessage : public Message<IMessage::TurnSampling>
+//{
+//	int32_t index;
+//	byte isSampling;
+//
+//	static IMessage* Create(InputDataStream& stream);
+//	virtual void Apply() override;
+//};
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

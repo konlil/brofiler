@@ -104,19 +104,6 @@ namespace Profiler.Data
         }
     }
 
-	public class FiberDescription
-	{
-		public UInt64 fiberID { get; set; }
-
-		public static FiberDescription Read(DataResponse response)
-		{
-			BinaryReader reader = response.Reader;
-			FiberDescription res = new FiberDescription();
-			res.fiberID = reader.ReadUInt64();
-			return res;
-		}
-	}
-
     public class ThreadDescription
     {
         public String Name { get; set; }
@@ -146,7 +133,6 @@ namespace Profiler.Data
 
         public List<ThreadDescription> Threads { get; private set; }
         public Dictionary<UInt64, int> ThreadID2ThreadIndex { get; private set; }
-		public List<FiberDescription> Fibers { get; private set; }
 
         private List<EventDescription> board = new List<EventDescription>();
         public List<EventDescription> Board
@@ -197,14 +183,6 @@ namespace Profiler.Data
                     // Can't do much here - lets show information for the new thread only.
                     desc.ThreadID2ThreadIndex[threadDesc.ThreadID] = i;
                 }
-            }
-
-            int fibersCount = reader.ReadInt32();
-			desc.Fibers = new List<FiberDescription>(fibersCount);
-            for (int i = 0; i < fibersCount; ++i)
-            {
-				FiberDescription fiberDesc = FiberDescription.Read(response);
-				desc.Fibers.Add(fiberDesc);
             }
 
             desc.MainThreadIndex = reader.ReadInt32();

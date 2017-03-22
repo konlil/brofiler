@@ -60,7 +60,7 @@ bool Engine::Update()
 
 	UpdateScene();
 
-	UpdatePhysics();
+	//UpdatePhysics();
 
 	Draw();
 
@@ -105,6 +105,7 @@ void Engine::Draw()
 void Engine::UpdatePhysics()
 { 
 	BROFILER_CATEGORY("UpdatePhysics", Brofiler::Color::Wheat);
+	SlowFunction2();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

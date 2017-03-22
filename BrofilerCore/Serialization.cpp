@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "Serialization.h"
 
+#include <iostream>
+
 namespace Brofiler
 {
 	std::string OutputDataStream::GetData()
@@ -84,7 +86,14 @@ namespace Brofiler
 
 	OutputDataStream & operator<<(OutputDataStream &stream, const std::thread::id& val)
 	{
-		stream << val;
+		/*std::ostringstream ss;
+		ss << val;
+		std::string stmp = ss.str();
+		stream << (uint32_t)stmp.size();
+		if (stmp.size() > 0)
+			stream << stmp;*/
+		uint64_t hash_id = std::hash<std::thread::id>()(val);
+		stream << hash_id;
 		return stream;
 	}
 

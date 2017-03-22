@@ -15,34 +15,12 @@ namespace Profiler.Data
         public List<EventFrame> Events { get; set; }
 		public List<Callstack> Callstacks { get; set; }
         public Synchronization Sync { get; set; }
-		public FiberSynchronization FiberSync { get; set; }
         public bool IsDirty { get; set; }
 
         public ThreadData()
         {
             Events = new List<EventFrame>();
         }
-
-		public void ApplyFiberSynchronization()
-		{
-			if (FiberSync == null)
-				return;
-
-			int currentInterval = 0;
-
-			foreach (EventFrame frame in Events)
-			{
-				while (currentInterval < FiberSync.Intervals.Count && FiberSync.Intervals[currentInterval].Finish <= frame.Header.Start)
-					++currentInterval;
-
-				while (currentInterval < FiberSync.Intervals.Count && FiberSync.Intervals[currentInterval].Finish <= frame.Header.Finish)
-					frame.FiberSync.Add(FiberSync.Intervals[currentInterval++]);
-
-				if (currentInterval < FiberSync.Intervals.Count && FiberSync.Intervals[currentInterval].Start <= frame.Header.Finish)
-					frame.FiberSync.Add(FiberSync.Intervals[currentInterval]);
-			}
-		}
-
 
         public void ApplySynchronization()
         {
@@ -94,7 +72,6 @@ namespace Profiler.Data
         public EventDescriptionBoard Board { get; set; }
         public ISamplingBoard SamplingBoard { get; set; }
         public List<ThreadData> Threads { get; set; }
-        public List<ThreadData> Fibers { get; set; }
 		public ThreadData MainThread { get { return Threads[Board.MainThreadIndex]; } }
 
 		public List<DataResponse> Responses { get; set; }
@@ -105,7 +82,6 @@ namespace Profiler.Data
 
             Board = board;
             Threads = new List<ThreadData>();
-            Fibers = new List<ThreadData>();
 			Responses = new List<DataResponse>();
 			Responses.Add(board.Response);
         }
@@ -124,17 +100,10 @@ namespace Profiler.Data
 					Threads.Add(new ThreadData());
 				}
 				Threads[threadIndex].Events.Add(frame);
-			} else
+			} 
+            else
 			{
-				int fiberIndex = frame.Header.FiberIndex;
-				if (fiberIndex >= 0)
-				{
-					while (fiberIndex >= Fibers.Count)
-					{
-						Fibers.Add(new ThreadData());
-					}
-					Fibers[fiberIndex].Events.Add(frame);
-				}
+
 			}
 
 
@@ -153,23 +122,6 @@ namespace Profiler.Data
 			}
             Threads[index].Sync = sync;
         }
-
-		public void AddFiberSynchronization(FiberSynchronization fiberSync)
-		{
-			System.Diagnostics.Debug.Assert(fiberSync != null && fiberSync.Response != null, "Invalid FiberSynchronization response");
-
-			Responses.Add(fiberSync.Response);
-
-			int index = fiberSync.FiberIndex;
-			while (index >= Fibers.Count)
-			{
-				Fibers.Add(new ThreadData());
-			}
-			Fibers[index].FiberSync = fiberSync;
-
-			SplitFiber(index);
-		}
-
 
 		public void AddSysCalls(SysCallBoard sysCallsBoard)
 		{
@@ -201,48 +153,6 @@ namespace Profiler.Data
 
             Responses.Add(pack.Response);
             SamplingBoard = pack;
-        }
-
-		private void SplitFiber(int fiberIndex)
-        {
-			ThreadData data = Fibers[fiberIndex];
-			data.ApplyFiberSynchronization();
-
-            foreach (EventFrame frame in data.Events)
-            {
-                foreach (FiberSyncInterval fiberSync in frame.FiberSync)
-                {
-                    int threadIndex = 0;
-					if (!Board.ThreadID2ThreadIndex.TryGetValue(fiberSync.threadId, out threadIndex))
-                    {
-						continue;
-					}
-
-					Durable border = new Durable(Math.Max(frame.Start, fiberSync.Start), Math.Min(frame.Finish, fiberSync.Finish));
-
-					List<Entry> entries = null;
-                    foreach (Entry entry in frame.Entries)
-                    {
-                        if (entry.Intersect(border))
-                        {
-							if (entries == null)
-							{
-								entries = new List<Entry>();
-							}
-                            entries.Add(new Entry(entry.Description, Math.Max(border.Start, entry.Start), Math.Min(border.Finish, entry.Finish)));
-                        }
-                    }
-
-					if (entries != null && entries.Count > 0)
-                    {
-						FrameHeader header = new FrameHeader(threadIndex, fiberIndex, border);
-                        EventFrame block = new EventFrame(header, entries, this);
-                        Threads[threadIndex].AddWithMerge(block);
-                    }
-
-
-                }
-            }
         }
 
         public void UpdateEventsSynchronization()
@@ -311,16 +221,6 @@ namespace Profiler.Data
                         FrameGroup group = groups[id];
 
 						group.AddSynchronization(new Synchronization(response, group));
-
-                        break;
-                    }
-
-				case DataResponse.Type.FiberSynchronization:
-                    {
-                        int id = response.Reader.ReadInt32();
-                        FrameGroup group = groups[id];
-
-						group.AddFiberSynchronization(new FiberSynchronization(response, group));
 
                         break;
                     }

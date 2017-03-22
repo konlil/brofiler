@@ -72,7 +72,7 @@ namespace Profiler.Data
     public bool IsSampling
     { 
       get { return Description.IsSampling; } 
-      set { Description.IsSampling = value; } 
+    //  set { Description.IsSampling = value; } 
     }
 
     [ColumnWidth(400)]

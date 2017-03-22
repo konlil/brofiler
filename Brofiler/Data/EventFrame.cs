@@ -12,13 +12,11 @@ namespace Profiler.Data
     public class FrameHeader : EventData
     {
         public int ThreadIndex { get; private set; }
-		public int FiberIndex { get; private set; }
 
         public static FrameHeader Read(BinaryReader reader)
         {
             FrameHeader header = new FrameHeader();
             header.ThreadIndex = reader.ReadInt32();
-			header.FiberIndex = reader.ReadInt32();
 
             header.ReadEventData(reader);
             return header;
@@ -26,10 +24,9 @@ namespace Profiler.Data
 
         public FrameHeader() { }
 
-        public FrameHeader(int threadIndex, int fiberIndex, IDurable duration)
+        public FrameHeader(int threadIndex, IDurable duration)
         {
 			ThreadIndex = threadIndex;
-			FiberIndex = fiberIndex;
             Start = duration.Start;
             Finish = duration.Finish;
         }
@@ -183,7 +180,6 @@ namespace Profiler.Data
         public List<Entry> Categories { get; private set; }
         public EventTree CategoriesTree { get; private set; }
         public List<Data.SyncInterval> Synchronization { get; private set; }
-		public List<Data.FiberSyncInterval> FiberSync { get; private set; }
 
         long IDurable.Finish
         {
@@ -294,7 +290,6 @@ namespace Profiler.Data
             CategoriesTree = new EventTree(this, Categories);
 
             Synchronization = new List<SyncInterval>();
-			FiberSync = new List<FiberSyncInterval>();
         }
 
         public double CalculateFilteredTime(HashSet<Object> filter)
@@ -335,7 +330,6 @@ namespace Profiler.Data
             board = new Board<EventBoardItem, EventDescription, EventNode>(root);
 
             Synchronization = new List<SyncInterval>();
-			FiberSync = new List<FiberSyncInterval>();
 
             IsLoaded = true;
         }

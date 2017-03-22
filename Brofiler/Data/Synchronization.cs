@@ -156,45 +156,4 @@ namespace Profiler.Data
 			}
         }
     }
-
-
-	public class FiberSyncInterval : Durable
-	{
-		public UInt64 threadId { get; set; }
-
-		public static FiberSyncInterval Read(DataResponse response)
-		{
-			FiberSyncInterval interval = new FiberSyncInterval();
-			interval.ReadDurable(response.Reader);
-
-			interval.threadId = response.Reader.ReadUInt64();
-
-			return interval;
-		}
-	}
-
-
-	public class FiberSynchronization : IResponseHolder
-	{
-		public override DataResponse Response { get; set; }
-		public int FiberIndex { get; set; }
-		public FrameGroup Group { get; set; }
-
-		public List<FiberSyncInterval> Intervals { get; set; }
-
-		public FiberSynchronization(DataResponse response, FrameGroup group)
-		{
-			Group = group;
-			Response = response;
-			FiberIndex = response.Reader.ReadInt32();
-
-			int count = response.Reader.ReadInt32();
-			Intervals = new List<FiberSyncInterval>(count);
-
-			for (int i = 0; i < count; ++i)
-			{
-				Intervals.Add(FiberSyncInterval.Read(response));
-			}
-		}
-	}
 }
