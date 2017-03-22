@@ -1,10 +1,12 @@
 #pragma once
 
+#include <stddef.h>
+#include <stdlib.h>
 #if SSE_INTRINSICS_SUPPORTED
 #include <xmmintrin.h>
 #endif
 
-//Windows�϶�Ӧ_aligned_malloc
+//Windows…œ∂‘”¶_aligned_malloc
 #if defined(BF_PLATFORM_WINDOWS)
 #define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ?0 :errno)
 
@@ -51,10 +53,14 @@ public:
 #if SSE_INTRINSICS_SUPPORTED
 		p = _mm_malloc(size, align);
 #else
+#if defined(BF_PLATFORM_IOS) || defined(BF_PLATFORM_ANDROID)
+        p = malloc(size);
+#else
 		if (posix_memalign(&p, size, align) != 0)
 		{
 			p = nullptr;
 		}
+#endif
 #endif
 		BF_ASSERT(p, "alloc memory failed");
 		return p;

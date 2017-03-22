@@ -168,7 +168,8 @@ public:
 	const THREADID GetMainThreadID() { return mainThreadID; }
 
 	// Active Frame (is used as buffer)
-	static BF_THREAD_LOCAL EventStorage* storage;
+	//static BF_THREAD_LOCAL EventStorage* storage;
+    static Platform::TLSStorage<EventStorage> storage;
 
 	// Resolves symbols
 	SymbolEngine* symbolEngine;
@@ -189,7 +190,8 @@ public:
 	void DumpFrames();
 
 	// Registers thread and create EventStorage
-	bool RegisterThread(const ThreadDescription& description, EventStorage** slot);
+	//bool RegisterThread(const ThreadDescription& description, EventStorage** slot);
+    bool RegisterThread(const ThreadDescription& description);
 
 	// UnRegisters thread
 	bool UnRegisterThread(THREADID threadId);

@@ -34,7 +34,8 @@ EventData* Event::Start(const EventDescription& description)
 {
 	EventData* result = nullptr;
 
-	if (EventStorage* storage = Core::storage)
+    EventStorage* storage = Core::storage.get();
+	if (storage)
 	{
 		result = &storage->NextEvent();
 		result->description = &description;
@@ -54,7 +55,8 @@ void Event::Stop(EventData& data)
 
 	if (data.description->isSampling)
 	{
-		if (EventStorage* storage = Core::storage)
+        EventStorage* storage = Core::storage.get();
+        if (storage)
 		{
 			storage->isSampling.fetch_sub(1);
 		}
@@ -86,7 +88,8 @@ Category::Category(const EventDescription& description) : Event(description)
 {
 	if (data)
 	{
-		if (EventStorage* storage = Core::storage)
+        EventStorage* storage = Core::storage.get();
+        if (storage)
 		{
 			storage->RegisterCategory(*data);
 		}

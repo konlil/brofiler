@@ -1,6 +1,16 @@
 # CMake 最低版本号
 cmake_minimum_required(VERSION 3.1)
 
+if(IOS OR IOS_SIM)
+	message(STATUS "ios...")
+elseif(ANDROID OR ANDROID_SIM)
+	message(STATUS "android...")
+elseif(WIN32)
+	message(STATUS "win32...")
+elseif(APPLE)
+	message(STATUS "mac...")
+endif()
+
 # 配置类型只支持Debug和带调试信息的Release
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 

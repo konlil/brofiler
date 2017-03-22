@@ -13,7 +13,8 @@
 
 extern "C" Brofiler::EventData* NextEvent()
 {
-	if (Brofiler::EventStorage* storage = Brofiler::Core::storage)
+    Brofiler::EventStorage* storage = Brofiler::Core::storage.get();
+	if (storage)
 	{
 		return &storage->NextEvent();
 	}
@@ -254,9 +255,17 @@ bool Core::IsRegistredThread(THREADID id)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Core::RegisterThread(const ThreadDescription& description, EventStorage** slot)
+//bool Core::RegisterThread(const ThreadDescription& description, EventStorage** slot)
+bool Core::RegisterThread(const ThreadDescription& description)
 {
 	Platform::ScopedGuard guard(lock);
+    
+    EventStorage* storage = Core::storage.get();
+    if ( !storage ){
+        storage = Core::storage.alloc(1);
+    }
+    EventStorage** slot = &storage;
+    
 	ThreadEntry* entry = new (Platform::Memory::Alloc(sizeof(ThreadEntry), BRO_CACHE_LINE_SIZE)) ThreadEntry(description, slot);
 	threads.push_back(entry);
 
@@ -310,7 +319,7 @@ const std::vector<ThreadEntry*>& Core::GetThreads() const
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // static TLS for each Thread
-BF_THREAD_LOCAL EventStorage* Core::storage = nullptr;
+//BF_THREAD_LOCAL EventStorage* Core::storage = nullptr;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Core Core::notThreadSafeInstance;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -351,14 +360,14 @@ BROFILER_API bool IsActive()
 	return Core::Get().isActive;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BROFILER_API EventStorage** GetEventStorageSlotForCurrentThread()
-{
-	return &Core::Get().storage;
-}
+//BROFILER_API EventStorage** GetEventStorageSlotForCurrentThread()
+//{
+//	return &Core::Get().storage.get();
+//}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool RegisterThread(const char* name)
 {
-	return Core::Get().RegisterThread(ThreadDescription(name, Platform::Thread::CurrentThreadID(), false), &Core::storage);
+	return Core::Get().RegisterThread(ThreadDescription(name, Platform::Thread::CurrentThreadID(), false));
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool UnRegisterThread()

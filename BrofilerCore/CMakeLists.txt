@@ -19,10 +19,13 @@ set(Platform
 		Platform/Platform.h
 		Platform/Posix_Time.h
 		Platform/Posix_Mutex.h
+		Platform/Posix_Tls.h
 		Platform/Posix_Thread.h
 		Platform/Win_Time.h
 		Platform/Win_Mutex.h
-		Platform/Win_Thread.h)
+		Platform/Win_Thread.h
+		Platform/Win_Tls.h
+		)
 
 set(Platform_Windows
 #		Platform/Windows/ETW.h

@@ -2,6 +2,7 @@ Bin/
 Brofiler/obj/
 Build/
 MyBuild/
+MyBuildIOS/
 *.suo
 *.user
 Publish/

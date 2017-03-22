@@ -6,7 +6,7 @@ namespace Brofiler
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<class T, uint32_t SIZE>
-struct MemoryChunk
+struct BRO_ALIGN_CACHE MemoryChunk
 {
 	BRO_ALIGN_CACHE T data[SIZE];
     //__attribute__((aligned(64))) T data[SIZE];
