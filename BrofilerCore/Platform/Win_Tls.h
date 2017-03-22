@@ -22,12 +22,12 @@ namespace Platform
     
     BF_FORCEINLINE bool TLSSet(unsigned long index, void* value)
     {
-        return TlsGetValue(index);
+        return TlsSetValue(index, value) != 0;
     }
     
     BF_FORCEINLINE void* TLSGet(unsigned long index)
     {
-        return TlsSetValue(index, value) != 0;
+        return TlsGetValue(index);
     }
     
     template<typename T>

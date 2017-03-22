@@ -21,6 +21,7 @@
 #include "Platform/Common.h"
 #include "Platform/Memory.h"
 #if defined( BF_PLATFORM_WINDOWS )
+#include <Windows.h>
 #include "Platform/Win_Time.h"
 #include "Platform/Win_Tls.h"
 #elif defined( BF_PLATFORM_OSX )

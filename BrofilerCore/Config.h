@@ -25,7 +25,7 @@
 
 // Inline
 #ifdef _WIN32
-#define BF_FORCEINLINE __forceline
+#define BF_FORCEINLINE __forceinline
 #else
 #define BF_FORCEINLINE inline __attribute__((always_inline))
 #endif
