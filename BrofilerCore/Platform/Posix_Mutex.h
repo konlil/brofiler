@@ -22,6 +22,7 @@ namespace Platform
 			Mutex()
 			{
 				int res = pthread_mutexattr_init(&mutexAttr);
+                BF_UNUSED(res);
 				BF_ASSERT(res == 0, "pthread_mutexattr_init - failed");
 
 				res = pthread_mutexattr_settype(&mutexAttr, PTHREAD_MUTEX_RECURSIVE);
@@ -34,9 +35,11 @@ namespace Platform
 			~Mutex()
 			{
 				int res = pthread_mutex_destroy(&mutex);
+                BF_UNUSED(res);
 				BF_ASSERT(res == 0, "pthread_mutex_destroy - failed");
 
 				res = pthread_mutexattr_destroy(&mutexAttr);
+                BF_UNUSED(res);
 				BF_ASSERT(res == 0, "pthread_mutexattr_destroy - failed");
 			}
 
@@ -47,11 +50,13 @@ namespace Platform
 			void Lock()
 			{
 				int res = pthread_mutex_lock(&mutex);
+                BF_UNUSED(res);
 				BF_ASSERT(res == 0, "pthread_mutex_lock - failed");
 			}
 			void Unlock()
 			{
 				int res = pthread_mutex_unlock(&mutex);
+                BF_UNUSED(res);
 				BF_ASSERT(res == 0, "pthread_mutex_unlock - failed");
 			}
 

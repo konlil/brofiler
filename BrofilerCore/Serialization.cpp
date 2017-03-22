@@ -49,9 +49,9 @@ namespace Brofiler
 		return stream;
 	}
 
-	OutputDataStream &operator << ( OutputDataStream &stream, byte val )
+	OutputDataStream &operator << ( OutputDataStream &stream, unsigned char val )
 	{
-		stream.write( (char*)&val, sizeof(byte) );
+		stream.write( (char*)&val, sizeof(unsigned char) );
 		return stream;
 	}
 	
@@ -109,9 +109,9 @@ namespace Brofiler
 		return stream;
 	}
 
-	InputDataStream & operator>>( InputDataStream &stream, byte &val )
+	InputDataStream & operator>>( InputDataStream &stream, unsigned char &val )
 	{
-		stream.read( (char*)&val, sizeof(byte) );
+		stream.read( (char*)&val, sizeof(unsigned char) );
 		return stream;
 	}
 

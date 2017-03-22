@@ -9,6 +9,7 @@ template<class T, uint32_t SIZE>
 struct MemoryChunk
 {
 	BRO_ALIGN_CACHE T data[SIZE];
+    //__attribute__((aligned(64))) T data[SIZE];
 	MemoryChunk* next;
 	MemoryChunk* prev;
 

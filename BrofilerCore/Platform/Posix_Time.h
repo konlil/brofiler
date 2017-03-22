@@ -15,7 +15,7 @@ namespace Brofiler
 namespace Platform
 {
 
-void Sleep(unsigned long time_ms)
+inline void Sleep(unsigned long time_ms)
 {
 	usleep((time_ms << 10) - (time_ms << 4) - (time_ms << 3));
 
@@ -31,24 +31,26 @@ void Sleep(unsigned long time_ms)
 	}*/
 }
 
-inline int64 GetFrequency()
+inline int64_t GetFrequency()
 {
 	return 1000000;	//TODO
 }
+    
+inline int64_t TimeMicroSeconds()
+{
+    struct timeval te;
+    gettimeofday(&te, nullptr);
+    return te.tv_sec * 1000000LL + te.tv_usec;
+}
 
-__inline int64_t TimeMilliSeconds()
+inline int64_t TimeMilliSeconds()
 {
 	return TimeMicroSeconds() / 1000;
 }
 
-__inline int64_t TimeMicroSeconds()
-{
-	struct timeval te;
-	gettimeofday(&te, nullptr);
-	return te.tv_sec * 1000000LL + te.tv_usec;
-}
 
-LocalTime GetLocalTime()
+
+inline LocalTime GetLocalTime()
 {
 	LocalTime local_time;
 	time_t now;

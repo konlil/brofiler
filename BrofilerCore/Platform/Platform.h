@@ -7,10 +7,14 @@
 
 //Debug Assert
 #if defined( BF_PLATFORM_WINDOWS)
-#define BF_ASSERT(x) do{ if(!(x)) { __debugbreak(); } } while(0);
-#elif defined( BF_PLATFORM_IOS || BF_PLATFORM_ANDROID )
-#define BF_ASSERT(x) do{ if(!x) { *((char*)0) = 0; } } while(0);
+#define BF_ASSERT(x, desc) do{ if(!(x)) { __debugbreak(); } } while(0);
+#else
+//#define BF_ASSERT(x, desc) do{ if(!(x)) { *((char*)0) = 0; } } while(0);
+#define BF_ASSERT(x, desc)
 #endif
+
+//used to ignore gcc warning
+#define BF_UNUSED(x) (void)(x)
 
 
 //Include Headers
@@ -18,6 +22,9 @@
 #include "Platform/Memory.h"
 #if defined( BF_PLATFORM_WINDOWS )
 #include "Platform/Win_Time.h"
+#elif defined( BF_PLATFORM_OSX )
+#include "Platform/Posix_Time.h"
+#include "Platform/Posix_Memory.h"
 #elif defined( BF_PLATFORM_IOS )
 #include "Platform/iOS/Time.h"
 #elif defined( BF_PLATFORM_ANDROID )

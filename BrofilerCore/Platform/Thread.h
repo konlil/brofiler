@@ -5,6 +5,9 @@
 #if defined( BF_PLATFORM_WINDOWS )
 #include "Platform/Win_Mutex.h"
 #include "Platform/Win_Thread.h"
+#elif defined( BF_PLATFORM_OSX )
+#include "Platform/Posix_Mutex.h"
+#include "Platform/Posix_Thread.h"
 #elif defined( BF_PLATFORM_IOS )
 #include "Platform/iOS_Thread.h"
 #elif defined( BF_PLATFORM_ANDROID )
@@ -46,7 +49,7 @@ namespace Platform
 
 	namespace Thread
 	{
-		static THREADID CurrentThreadID() { return std::this_thread::get_id(); }
+		inline THREADID CurrentThreadID() { return std::this_thread::get_id(); }
 	};
 }
 }

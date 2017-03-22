@@ -45,7 +45,7 @@ inline int64_t TimeMicroSeconds()
 	return largeInteger.QuadPart * int64_t(1000000) / frequency.QuadPart;
 }
 
-inline LocalTime GetLocalTime()
+/*LocalTime GetLocalTime()
 {
 	LocalTime local_time;
 	SYSTEMTIME t;
@@ -58,7 +58,7 @@ inline LocalTime GetLocalTime()
 	local_time.second = t.wSecond;
 	local_time.millisecond = t.wMilliseconds;
 	return local_time;
-}
+}*/
 
 
 }//Platform

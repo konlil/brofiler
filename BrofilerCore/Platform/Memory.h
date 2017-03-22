@@ -45,7 +45,7 @@ namespace Platform
 class Memory 
 {
 public:
-	static void* Memory::Alloc(size_t size, size_t align)
+	static void* Alloc(size_t size, size_t align)
 	{
 		void* p = nullptr;
 #if SSE_INTRINSICS_SUPPORTED
@@ -56,11 +56,11 @@ public:
 			p = nullptr;
 		}
 #endif
-		BF_ASSERT(p!=nullptr);
+		BF_ASSERT(p, "alloc memory failed");
 		return p;
 	}
 
-	static void Memory::Free(void* p)
+	static void Free(void* p)
 	{
 #if SSE_INTRINSICS_SUPPORTED
 		_mm_free(p);

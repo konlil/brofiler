@@ -2,6 +2,15 @@
 
 #if defined(_WIN32)
 #define BF_PLATFORM_WINDOWS (1)
+#elif defined( __APPLE__ )
+#include "TargetConditionals.h"
+#if TARGET_OS_MAC
+#define BF_PLATFORM_OSX (1)
+#elif TARGET_OS_IPHONE
+#define BF_PLATFORM_IOS (1)
+#else
+#error "Unknown Apple Platform"
+#endif
 #endif
 
 // Compiler family
