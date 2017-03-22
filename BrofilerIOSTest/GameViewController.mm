@@ -8,6 +8,7 @@
 
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
+#include "Brofiler.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -193,6 +194,8 @@ GLfloat gCubeVertexData[216] =
 
 - (void)update
 {
+    BROFILER_CATEGORY("update", Brofiler::Color::SkyBlue);
+    
     float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
     
@@ -222,6 +225,8 @@ GLfloat gCubeVertexData[216] =
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    BROFILER_CATEGORY("draw", Brofiler::Color::Red);
+    
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     

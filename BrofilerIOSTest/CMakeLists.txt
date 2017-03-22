@@ -9,13 +9,13 @@ set(TARGET BrofilerIOSTest)
 # 指定生成目标
 add_executable(${TARGET} MACOSX_BUNDLE
 				AppDelegate.h
-				AppDelegate.m
+				AppDelegate.mm
 				GameViewController.h
-				GameViewController.m
+				GameViewController.mm
 				LaunchScreen.storyboard
 				Shaders/Shader.fsh
 				Shaders/Shader.vsh
-				main.m
+				main.mm
 			)
 
 # 添加链接库

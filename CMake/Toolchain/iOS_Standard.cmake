@@ -121,7 +121,7 @@ if (NOT ("${SDKVER}" STRLESS "7.0"))
 		include_directories(SYSTEM "${SDKROOT}/usr/include/c++/4.2.1")
 	endif()
 else()
-	include_directories(SYSTEM "${SDKROOT}/usr/c++/4.2.1")
+	#include_directories(SYSTEM "${SDKROOT}/usr/c++/4.2.1")
 endif()
 
 
