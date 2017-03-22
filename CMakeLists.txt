@@ -33,5 +33,9 @@ include(Common)
 # 添加子目录
 add_subdirectory(BrofilerCore)
 add_subdirectory(BrofilerTest)
-add_subdirectory(BrofilerWindowsTest)
-#add_subdirectory(ThirdParty/TaskScheduler/Scheduler)
+
+if(WIN32)
+	add_subdirectory(BrofilerWindowsTest)
+elseif(IOS)
+	add_subdirectory(BrofilerIOSTest)
+endif()
