@@ -136,7 +136,7 @@ namespace Brofiler
 
 			if (::bind(listenSocket, (sockaddr *)&address, sizeof(address)) == 0)
 			{
-				Platform::Log("[server] bind socket at port: %d successfully.\n", port);
+				Platform::Log("[info] Bind socket at port: %d successfully.\n", port);
 				return true;
 			}
 
@@ -198,6 +198,7 @@ namespace Brofiler
 
 			Platform::ScopedGuard guard(lock);
 			acceptSocket = incomingSocket;
+            Platform::Log("[info] accept socket.\n");
 		}
 
 		bool Send(const char *buf, size_t len)

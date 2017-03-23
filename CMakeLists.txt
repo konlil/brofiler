@@ -22,12 +22,12 @@ set (CMAKE_CXX_STANDARD 11)
 
 # CMAKE_SOURCE_DIR 内置变量，表示Cmake开始构建时的入口路径
 # CMAKE_MODULE_PATH 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # 项目信息
 project (Brofiler)
 
-# 包含公用定义的模块 Common.cmake
+# 包含公用定义的模块 CMake/Common.cmake
 include(Common)
 
 # 添加子目录

@@ -29,3 +29,16 @@ target_link_libraries(${TARGET} "-framework Security" "-framework CoreGraphics" 
 #设置xcode属性
 set(_plist_in "${CMAKE_MODULE_PATH}/IOSBundleInfo.plist.in")
 set_target_properties(${TARGET} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer" MACOSX_BUNDLE_INFO_PLIST ${_plist_in})
+
+#拷贝自定义资源到app bundle
+set(BUNDLE_RES_LIST Shaders/Shader.fsh Shaders/Shader.vsh)
+ADD_CUSTOM_COMMAND(
+			TARGET ${TARGET} 
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} 
+			  -DFILES_LIST="${BUNDLE_RES_LIST}"  -DDESTINATION="\${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}" 
+			  -DEXCLUDE_EXT=".svn .git CVS .DS_Store" 
+			  -P ${CMAKE_MODULE_PATH}/CopyFiles.cmake
+			WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+COMMENT "Copying resource files to iOS App Bundle..." )
+

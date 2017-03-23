@@ -8,7 +8,36 @@
 
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
+
+#include <vector>
 #include "Brofiler.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static const unsigned long REPEAT_COUNT = 128 * 1024;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+template<unsigned long N>
+void SlowFunction()
+{ PROFILE
+    // Make it static to fool compiler and prevent it from skipping
+    static float value = 0.0f;
+    
+    for (unsigned long i = 0; i < N; ++i)
+        value = (value + sin((float)i)) * 0.5f;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void SlowFunction2()
+{ PROFILE
+    // Make it static to fool compiler and prevent it from skipping
+    static std::vector<float> values(1024 * 1024);
+    
+    for (size_t i = 1; i < values.size(); ++i)
+    {
+        values[i] += i;
+        values[i] *= i;
+        values[i] /= i;
+        values[i] -= i;
+    }
+}
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -196,6 +225,10 @@ GLfloat gCubeVertexData[216] =
 {
     BROFILER_FRAME("frame");
     
+    BROFILER_CATEGORY("test_code", Brofiler::Color::Gold);
+    SlowFunction2();
+    
+    
     BROFILER_CATEGORY("update", Brofiler::Color::SkyBlue);
     
     float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
@@ -228,6 +261,9 @@ GLfloat gCubeVertexData[216] =
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     BROFILER_CATEGORY("draw", Brofiler::Color::Red);
+    
+    BROFILER_CATEGORY("test_code2", Brofiler::Color::Gold);
+    SlowFunction<REPEAT_COUNT>();
     
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
