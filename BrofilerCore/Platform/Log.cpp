@@ -1,7 +1,7 @@
 #include <cstdarg>
 #include <string>
 
-#include "..\Config.h"
+#include "Config.h"
 #include "Common.h"
 #if defined( BF_PLATFORM_WINDOWS )
 #include <Windows.h>

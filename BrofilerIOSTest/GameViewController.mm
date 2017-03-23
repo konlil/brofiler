@@ -194,6 +194,8 @@ GLfloat gCubeVertexData[216] =
 
 - (void)update
 {
+    BROFILER_FRAME("frame");
+    
     BROFILER_CATEGORY("update", Brofiler::Color::SkyBlue);
     
     float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);

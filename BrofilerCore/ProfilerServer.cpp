@@ -19,6 +19,7 @@ Server::Server(short port) : socket(new Socket()), isInitialized(false)
 {
 	socket->Bind(port, 8);
 	socket->Listen();
+    Platform::Log("Start listening...\n");
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Server::Update()
