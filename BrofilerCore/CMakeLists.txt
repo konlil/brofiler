@@ -25,6 +25,8 @@ set(Platform
 		Platform/Win_Mutex.h
 		Platform/Win_Thread.h
 		Platform/Win_Tls.h
+		Platform/Log.h
+		Platform/Log.cpp
 		)
 
 set(Platform_Windows
@@ -86,7 +88,6 @@ set(SOURCE_FILES
 		${System})
 
 # 设置包含路径
-#include_directories("${PROJECT_SOURCE_DIR}/ThirdParty/TaskScheduler/Scheduler/include")
 include_directories("${PROJECT_SOURCE_DIR}/BrofilerCore")
 
 # 自定义宏

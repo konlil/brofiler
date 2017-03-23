@@ -136,6 +136,7 @@ namespace Brofiler
 
 			if (::bind(listenSocket, (sockaddr *)&address, sizeof(address)) == 0)
 			{
+				Platform::Log("[server] bind socket at port: %d successfully.\n", port);
 				return true;
 			}
 
@@ -179,6 +180,7 @@ namespace Brofiler
 				return true;
 			}
 
+			Platform::Log("[error] bind socket at port: %d with range: %d failed.\n", startPort, portRange);
 			return false;
 		}
 

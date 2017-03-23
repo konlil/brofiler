@@ -38,3 +38,5 @@
 #error "Unrecognzied Platform"
 #endif
 #include "Platform/Thread.h"
+
+#include "Platform/Log.h"
