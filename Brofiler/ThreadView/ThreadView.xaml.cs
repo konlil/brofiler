@@ -92,8 +92,10 @@ namespace Profiler
             
             rows.Add(new HeaderThreadRow(group)
             {
-                GradientTop = Colors.LightGray,
-                GradientBottom = Colors.Gray,
+                //GradientTop = Colors.LightGray,
+                GradientTop = Colors.Green,
+                GradientBottom = Colors.Green,
+                //GradientBottom = Colors.Gray,
                 SplitLines = Colors.White,
                 TextColor = Colors.Black
             });

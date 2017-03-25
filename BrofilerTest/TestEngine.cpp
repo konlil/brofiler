@@ -4,7 +4,7 @@
 #include "TestEngine.h"
 #include <math.h>
 #include <vector>
-
+#include <cstdlib>
 
 namespace Test
 {
@@ -29,8 +29,9 @@ void SlowFunction()
 { PROFILE
 	// Make it static to fool compiler and prevent it from skipping
 	static float value = 0.0f;
-	
-	for (unsigned long i = 0; i < N; ++i)
+
+	int T = rand() % 1000 + 127 * 1024;
+	for (unsigned long i = 0; i < T; ++i)
 		value = (value + sin((float)i)) * 0.5f;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +39,9 @@ void SlowFunction2()
 { PROFILE
 	// Make it static to fool compiler and prevent it from skipping
 	static std::vector<float> values(1024 * 1024);
+
+	int T = rand() % 1000 + 127 * 1024;
+	values.reserve(T);
 
 	for (size_t i = 1; i < values.size(); ++i)
 	{
@@ -56,7 +60,7 @@ bool Engine::Update()
 
 	UpdateLogic();
 
-	UpdateTasks();
+	//UpdateTasks();
 
 	UpdateScene();
 

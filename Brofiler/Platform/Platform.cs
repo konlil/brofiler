@@ -21,7 +21,12 @@ namespace Profiler
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                     return ip;
 
-            return IPAddress.Parse("127.0.0.1");
+            return IPAddress.Parse("10.242.88.196");
+        }
+
+        public static IPAddress GetIPhoneAddress()
+        {
+            return IPAddress.Parse("10.242.88.196");
         }
     }
 }

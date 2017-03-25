@@ -286,6 +286,7 @@ namespace Profiler.Data
         protected void ReadInternal(BinaryReader reader)
         {
             Header = FrameHeader.Read(reader);
+            //Console.WriteLine("Recv Frame, duration: {0} ms, {1}, {2}", Header.Duration, Header.Start, Header.Finish);
             Categories = ReadEventList(reader, DescriptionBoard);
             CategoriesTree = new EventTree(this, Categories);
 

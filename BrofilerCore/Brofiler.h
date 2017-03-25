@@ -228,6 +228,7 @@ struct EventTime
 
 	BRO_INLINE void Start() { start  = Brofiler::GetHighPrecisionTime(); }
 	BRO_INLINE void Stop() 	{ finish = Brofiler::GetHighPrecisionTime(); }
+	BRO_INLINE float Duration() const { return (finish - start) / 1000.0; }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct EventData : public EventTime

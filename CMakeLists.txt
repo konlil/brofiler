@@ -12,7 +12,7 @@ elseif(APPLE)
 endif()
 
 # 配置类型只支持Debug和带调试信息的Release
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release" CACHE STRING "" FORCE)
 
 # 不生成ZERO CHECK
 set(CMAKE_SUPPRESS_REGENERATION true)

@@ -199,7 +199,7 @@ public:
 	bool UnRegisterThread(THREADID threadId);
 
 	// Check is registered thread
-	bool IsRegistredThread(THREADID id);
+	bool IsCurrentThreadRegistered();
 
 	// NOT Thread Safe singleton (performance)
 	static BRO_INLINE Core& Get() { return notThreadSafeInstance; }

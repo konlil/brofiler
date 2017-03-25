@@ -82,6 +82,7 @@ namespace Profiler
             platforms.Add(new PlatformDescription() { Name = "PS4", IP = Platform.GetPS4Address(),  Icon = "appbar_social_playstation" });
             platforms.Add(new PlatformDescription() { Name = "Xbox", IP = Platform.GetXONEAddress(), Icon = "appbar_controller_xbox" });
             platforms.Add(new PlatformDescription() { Name = "Network", IP = IPAddress.Loopback, Icon = "appbar_network", Detailed = true });
+            platforms.Add(new PlatformDescription() { Name = "IPhone", IP = Platform.GetIPhoneAddress(), Icon = "appbar_network", Detailed = true });
 
             comboBox.ItemsSource = platforms;
 

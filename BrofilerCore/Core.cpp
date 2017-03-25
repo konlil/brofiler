@@ -54,8 +54,10 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 	{
 		const EventData* rootEvent = nullptr;
 
+		Platform::Log("[Brofiler]DumpEvents ------------ %d \n", entry.eventBuffer.Size());
 		entry.eventBuffer.ForEach([&](const EventData& data)
 		{
+			Platform::Log("[Brofiler]DumpEvents, duration: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 			if (data.finish >= data.start && data.start >= timeSlice.start && timeSlice.finish >= data.finish)
 			{
 				if (!rootEvent)
@@ -65,6 +67,7 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 				} 
 				else if (rootEvent->finish < data.finish)
 				{
+					Platform::Log("[Brofiler]DumpEvents, --- change root: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 					scope.Send();
 
 					rootEvent = &data;
@@ -77,6 +80,7 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 			}
 		});
 
+		Platform::Log("[Brofiler]DumpEvents, header duration: %f ms\n", rootEvent->Duration());
 		scope.Send();
 	}
 }
@@ -178,7 +182,11 @@ void Core::Update()
 	if (isActive)
 	{
 		if (!frames.empty())
+		{
 			frames.back().Stop();
+			EventTime& time = frames.back();
+			Platform::Log("[Brofiler]Frame time: %f ms\n", (time.finish - time.start) / 1000.0);
+		}
 
 		if (IsTimeToReportProgress())
 			DumpCapturingProgress();		
@@ -240,13 +248,14 @@ void Core::SendHandshakeResponse(CaptureStatus::Type status)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Core::IsRegistredThread(THREADID id)
+bool Core::IsCurrentThreadRegistered()
 {
 	Platform::ScopedGuard guard(lock);
+	THREADID cur_id = Platform::Thread::CurrentThreadID();
 	for (ThreadList::iterator it = threads.begin(); it != threads.end(); ++it)
 	{
 		ThreadEntry* entry = *it;
-		if (entry->description.threadID == id)
+		if (entry->description.threadID == cur_id)
 		{
 			return true;
 		}

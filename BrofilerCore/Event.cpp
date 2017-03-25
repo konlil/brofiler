@@ -32,6 +32,12 @@ EventDescription& EventDescription::operator=(const EventDescription&)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EventData* Event::Start(const EventDescription& description)
 {
+	if (!Core::Get().IsCurrentThreadRegistered())
+	{
+		Platform::Log("[Brofiler][Warning] Event (%s @%s,line %d) start from unregistered thread. \n", description.name, description.file, description.line);
+		return nullptr;
+	}
+
 	EventData* result = nullptr;
 
 	EVENT_STORAGE_PTR_SLOT slot = Core::storage.get();

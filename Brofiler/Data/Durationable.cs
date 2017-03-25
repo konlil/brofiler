@@ -38,7 +38,7 @@ namespace Profiler.Data
 		private static double freq = 1;
 		public static void InitFrequency(long frequency)
 		{
-			freq = 1000.0 / (double)frequency;
+			freq = 1/1000.0; // / (double)frequency;
 		}
 
 		public double Duration

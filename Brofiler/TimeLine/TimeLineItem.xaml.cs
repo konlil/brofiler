@@ -60,7 +60,7 @@ namespace Profiler
 		{
 			if (DataContext is Data.EventFrame)
 			{
-        Data.EventFrame frame = (Data.EventFrame)DataContext;
+                Data.EventFrame frame = (Data.EventFrame)DataContext;
 				LayoutRoot.Children.Clear();
 
 				double frameStartMS = frame.Header.StartMS;
