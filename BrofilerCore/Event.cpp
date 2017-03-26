@@ -9,6 +9,7 @@ namespace Brofiler
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static Platform::Mutex g_lock;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//EventDescription* EventDescription::Create(uint32_t mask, const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor /*= Color::Null*/)
 EventDescription* EventDescription::Create(const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor /*= Color::Null*/)
 {
 	Platform::ScopedGuard guard(g_lock);
@@ -18,10 +19,11 @@ EventDescription* EventDescription::Create(const char* eventName, const char* fi
 	result->file = fileName;
 	result->line = fileLine;
 	result->color = eventColor;
+	//result->c_mask = mask;
 	return result;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-EventDescription::EventDescription() : isSampling(false), name(""), file(""), line(0), color(0)
+EventDescription::EventDescription() : isSampling(false), name(""), file(""), line(0), color(0) //, c_mask(0)
 {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +39,11 @@ EventData* Event::Start(const EventDescription& description)
 		Platform::Log("[Brofiler][Warning] Event (%s @%s,line %d) start from unregistered thread. \n", description.name, description.file, description.line);
 		return nullptr;
 	}
+
+	/*if (!Core::Get().IsValidMask(description.c_mask))
+	{
+		return nullptr;
+	}*/
 
 	EventData* result = nullptr;
 
@@ -80,7 +87,7 @@ OutputDataStream& operator<<(OutputDataStream& stream, const SyncData& ob)
 	return stream << (EventTime)(ob) << ob.core << ob.reason << ob.newThreadId;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Category::Category(const EventDescription& description) : Event(description)
+Category::Category( const EventDescription& description) : Event(description)
 {
 	if (data)
 	{

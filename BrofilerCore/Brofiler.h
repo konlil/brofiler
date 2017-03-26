@@ -216,7 +216,6 @@ struct EventStorage;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool RegisterThread(const char* name);
 BROFILER_API bool UnRegisterThread();
-BROFILER_API EventStorage** GetEventStorageSlotForCurrentThread();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct EventDescription;
 struct Frame;
@@ -257,7 +256,9 @@ struct BROFILER_API EventDescription
 	uint32_t line;
 	uint32_t index;
 	uint32_t color;
+	uint32_t c_mask;
 
+	//static EventDescription* Create(uint32_t mask, const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor = Color::Null);
 	static EventDescription* Create(const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor = Color::Null);
 private:
 	friend class EventDescriptionBoard;
@@ -272,7 +273,7 @@ struct BROFILER_API Event
 	static EventData* Start(const EventDescription& description);
 	static void Stop(EventData& data);
 
-	Event( const EventDescription& description )
+	Event(const EventDescription& description )
 	{
 		data = Start(description);
 	}
@@ -332,6 +333,33 @@ struct ThreadScope
 #define BROFILER_START_THREAD(FRAME_NAME) ::Brofiler::RegisterThread(FRAME_NAME);
 
 #define BROFILER_STOP_THREAD() ::Brofiler::UnRegisterThread();
+
+// Compiled markup-level
+#define BROFILER_COMPILED_LEVEL 0
+
+#define BROFILER_CATEGORY1(NAME, COLOR) BROFILER_CATEGORY(NAME, COLOR)
+#define BROFILER_CATEGORY2(NAME, COLOR) BROFILER_CATEGORY(NAME, COLOR)
+#define BROFILER_CATEGORY3(NAME, COLOR) BROFILER_CATEGORY(NAME, COLOR)
+#define BROFILER_CATEGORY4(NAME, COLOR) BROFILER_CATEGORY(NAME, COLOR)
+#define BROFILER_CATEGORY5(NAME, COLOR) BROFILER_CATEGORY(NAME, COLOR)
+#if BROFILER_COMPILED_LEVEL == 0
+#elif BROFILER_COMPILED_LEVEL <= 4
+#define BROFILER_CATEGORY5(NAME, COLOR)
+#elif BROFILER_COMPILED_LEVEL <= 3
+#define BROFILER_CATEGORY4(NAME, COLOR)
+#define BROFILER_CATEGORY5(NAME, COLOR)
+#elif BROFILER_COMPILED_LEVEL <= 2
+#define BROFILER_CATEGORY3(NAME, COLOR)
+#define BROFILER_CATEGORY4(NAME, COLOR)
+#define BROFILER_CATEGORY5(NAME, COLOR)
+#elif BROFILER_COMPILED_LEVEL <= 1
+#define BROFILER_CATEGORY2(NAME, COLOR)
+#define BROFILER_CATEGORY3(NAME, COLOR)
+#define BROFILER_CATEGORY4(NAME, COLOR)
+#define BROFILER_CATEGORY5(NAME, COLOR)
+#endif
+
+// Runtime markup-level
 																				
 #else
 #define BROFILER_EVENT(NAME)

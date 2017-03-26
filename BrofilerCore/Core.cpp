@@ -170,7 +170,7 @@ void Core::CleanupThreads()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Core::Core() : progressReportedLastTimestampMS(0), isActive(false)
+Core::Core() : progressReportedLastTimestampMS(0), isActive(false), capture_mask(0xFFFFFFFF)
 {
 	mainThreadID = Platform::Thread::CurrentThreadID();
 }
@@ -261,6 +261,19 @@ bool Core::IsCurrentThreadRegistered()
 		}
 	}
 	return false;
+}
+
+bool Core::IsValidMask(uint32_t mask)
+{
+	Platform::ScopedGuard guard(lock);
+	return (capture_mask & mask) == mask;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Core::SetCaptureMask(uint32_t mask)
+{
+	Platform::ScopedGuard guard(lock);
+	capture_mask = mask;
 }
 
 
@@ -368,11 +381,6 @@ BROFILER_API bool IsActive()
 {
 	return Core::Get().isActive;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//BROFILER_API EventStorage** GetEventStorageSlotForCurrentThread()
-//{
-//	return &Core::Get().storage.get();
-//}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool RegisterThread(const char* name)
 {

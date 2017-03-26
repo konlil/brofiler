@@ -51,6 +51,7 @@ set(Utils
 set(Core
 		Core.cpp
 		Core.h
+        Singleton.h
 		Event.h
 		Event.cpp
 		EventDescriptionBoard.cpp

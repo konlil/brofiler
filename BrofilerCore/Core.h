@@ -1,6 +1,6 @@
 #pragma once
 #include "Brofiler.h"
-
+#include "Singleton.h"
 #include "Event.h"
 #include "MemoryPool.h"
 #include "Serialization.h"
@@ -132,6 +132,7 @@ struct CaptureStatus
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 class Core
 {
 	Platform::Mutex lock;
@@ -144,6 +145,8 @@ class Core
 
 	std::vector<EventTime> frames;
 
+	uint32_t capture_mask;
+
 	//CallstackCollector callstackCollector;
 	//SysCallCollector syscallCollector;
 
@@ -153,6 +156,7 @@ class Core
 	Core();
 	~Core();
 
+	//friend struct Singleton<Core>;
 	static Core notThreadSafeInstance;
 
 	void DumpCapturingProgress();
@@ -201,7 +205,14 @@ public:
 	// Check is registered thread
 	bool IsCurrentThreadRegistered();
 
+	// Set global capture mask
+	void SetCaptureMask(uint32_t mask);
+
+	// Check with capture mask
+	bool IsValidMask(uint32_t mask);
+
 	// NOT Thread Safe singleton (performance)
+	//static BRO_INLINE Core& Get() { return Singleton<Core>::instance(); }
 	static BRO_INLINE Core& Get() { return notThreadSafeInstance; }
 
 	// Main Update Function
