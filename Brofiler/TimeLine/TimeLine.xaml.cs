@@ -67,93 +67,93 @@ namespace Profiler
 
         Version CurrentVersion { get { return Assembly.GetExecutingAssembly().GetName().Version; } }
 
-        String GetUniqueID()
-        {
-            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-            return nics.Length > 0 ? nics[0].GetPhysicalAddress().ToString() : new Random().Next().ToString();
-        }
+        //String GetUniqueID()
+        //{
+        //    NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+        //    return nics.Length > 0 ? nics[0].GetPhysicalAddress().ToString() : new Random().Next().ToString();
+        //}
 
-        void SendReportToGoogleAnalytics()
-        {
-            var postData = new Dictionary<string, string>
-            {
-				{ "v", "1" },
-				{ "tid", "UA-58006599-1" },
-				{ "cid", GetUniqueID() },
-				{ "t", "pageview" },
-                { "dh", "brofiler.com" },
-                { "dp", "/app.html" },
-                { "dt", CurrentVersion.ToString() }
-            };
+        //void SendReportToGoogleAnalytics()
+        //{
+        //    var postData = new Dictionary<string, string>
+        //    {
+        //        { "v", "1" },
+        //        { "tid", "UA-58006599-1" },
+        //        { "cid", GetUniqueID() },
+        //        { "t", "pageview" },
+        //        { "dh", "brofiler.com" },
+        //        { "dp", "/app.html" },
+        //        { "dt", CurrentVersion.ToString() }
+        //    };
 
-            StringBuilder text = new StringBuilder();
+        //    StringBuilder text = new StringBuilder();
 
-            foreach (var pair in postData)
-            {
-                if (text.Length != 0)
-                    text.Append("&");
+        //    foreach (var pair in postData)
+        //    {
+        //        if (text.Length != 0)
+        //            text.Append("&");
 
-                text.Append(String.Format("{0}={1}", pair.Key, HttpUtility.UrlEncode(pair.Value)));
-            }
+        //        text.Append(String.Format("{0}={1}", pair.Key, HttpUtility.UrlEncode(pair.Value)));
+        //    }
 
-            using (WebClient client = new WebClient())
-            {
-                client.UploadStringAsync(new Uri("http://www.google-analytics.com/collect"), "POST", text.ToString());
-            }
-        }
+        //    using (WebClient client = new WebClient())
+        //    {
+        //        client.UploadStringAsync(new Uri("http://www.google-analytics.com/collect"), "POST", text.ToString());
+        //    }
+        //}
 
         void TimeLine_Loaded(object sender, RoutedEventArgs e)
         {
-            checkVersion = new WebClient();
+            //checkVersion = new WebClient();
 
-            checkVersion.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            checkVersion.DownloadStringCompleted += new DownloadStringCompletedEventHandler(OnVersionDownloaded);
+            //checkVersion.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+            //checkVersion.DownloadStringCompleted += new DownloadStringCompletedEventHandler(OnVersionDownloaded);
 
-            try
-            {
-                checkVersion.DownloadStringAsync(new Uri("http://brofiler.com/update"));
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.Message);
-            }
+            //try
+            //{
+            //    checkVersion.DownloadStringAsync(new Uri("http://brofiler.com/update"));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.Print(ex.Message);
+            //}
 
         }
 
         void OnVersionDownloaded(object sender, DownloadStringCompletedEventArgs e)
         {
-            if (e.Cancelled || e.Error != null || String.IsNullOrEmpty(e.Result))
-                return;
+            //if (e.Cancelled || e.Error != null || String.IsNullOrEmpty(e.Result))
+            //    return;
 
-            try
-            {
-                SendReportToGoogleAnalytics();
+            //try
+            //{
+            //    SendReportToGoogleAnalytics();
 
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(e.Result);
+            //    XmlDocument doc = new XmlDocument();
+            //    doc.LoadXml(e.Result);
 
-                XmlElement versionNode = doc.SelectSingleNode("//div[@id='version']") as XmlElement;
+            //    XmlElement versionNode = doc.SelectSingleNode("//div[@id='version']") as XmlElement;
 
-                if (versionNode != null)
-                {
-                    Version version = Version.Parse(versionNode.InnerText);
+            //    if (versionNode != null)
+            //    {
+            //        Version version = Version.Parse(versionNode.InnerText);
 
-                    if (version != CurrentVersion)
-                    {
-                        XmlElement messageNode = doc.SelectSingleNode("//div[@id='message']") as XmlElement;
-                        String message = messageNode != null ? messageNode.InnerText : String.Empty;
+            //        if (version != CurrentVersion)
+            //        {
+            //            XmlElement messageNode = doc.SelectSingleNode("//div[@id='message']") as XmlElement;
+            //            String message = messageNode != null ? messageNode.InnerText : String.Empty;
 
-                        XmlElement urlNode = doc.SelectSingleNode("//div[@id='url']") as XmlElement;
-                        String url = urlNode != null ? urlNode.InnerText : String.Empty;
+            //            XmlElement urlNode = doc.SelectSingleNode("//div[@id='url']") as XmlElement;
+            //            String url = urlNode != null ? urlNode.InnerText : String.Empty;
 
-                        ShowWarning(message, url);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.Message);
-            }
+            //            ShowWarning(message, url);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.Print(ex.Message);
+            //}
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -452,20 +452,22 @@ namespace Profiler
 
         private void ClearSamplingButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ProfilerClient.Get().SendMessage(new TurnSamplingMessage(-1, false));
+            //ProfilerClient.Get().SendMessage(new TurnSamplingMessage(-1, false));
         }
 
         private void ClearHooksButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ProfilerClient.Get().SendMessage(new SetupHookMessage(0, false));
+            //ProfilerClient.Get().SendMessage(new SetupHookMessage(0, false));
         }
 
-        private void StartButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
+        private void StopButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ProfilerClient.Get().SendMessage(new StopMessage());
+            StartButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
         }
 
-        private void StartButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        private void StartButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var platform = PlatformCombo.ActivePlatform;
 
@@ -494,6 +496,14 @@ namespace Profiler
                     socketThread.Start();
                 }
             }
+            else
+            {
+                MessageBox.Show("Send start message failed, check network setting pls", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
+            StartButton.IsEnabled = false;
+            StopButton.IsEnabled = true;
         }
     }
 
