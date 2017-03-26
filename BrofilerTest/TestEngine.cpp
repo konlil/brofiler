@@ -52,8 +52,18 @@ void SlowFunction2()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Engine::Update()
-{ 
+bool Engine::Frame()
+{
+	Update();
+	Render();
+
+	return true;
+}
+
+void Engine::Update()
+{
+	BROFILER_CATEGORY("Update", Brofiler::Color::Chartreuse);
+
 	UpdateInput();
 
 	UpdateMessages();
@@ -65,11 +75,14 @@ bool Engine::Update()
 	UpdateScene();
 
 	//UpdatePhysics();
-
-	Draw();
-
-	return true;
 }
+
+void Engine::Render()
+{
+	BROFILER_CATEGORY("Draw", Brofiler::Color::Beige);
+	Draw();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Engine::UpdateInput()
 {

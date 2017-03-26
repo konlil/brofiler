@@ -32,7 +32,7 @@ int main()
 	{
 		BROFILER_FRAME("MainThread");
 		
-		if (!engine.Update())
+		if (!engine.Frame())
 			break;
 
 		cout<<'.'; 

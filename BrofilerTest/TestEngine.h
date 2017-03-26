@@ -18,13 +18,16 @@ namespace Test
 		void UpdateTasks();
 		void UpdateScene();
 		void Draw();
+
+		void Render();
+		void Update();
 	public:
 		Engine();
 		~Engine();
 
 		// Updates engine, should be called once per frame.
 		// Returns false if it doesn't want to update any more.
-		bool Update();
+		bool Frame();
 
 		void UpdatePhysics();
 
