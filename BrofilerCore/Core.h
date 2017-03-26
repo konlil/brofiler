@@ -156,8 +156,7 @@ class Core
 	Core();
 	~Core();
 
-	//friend struct Singleton<Core>;
-	static Core notThreadSafeInstance;
+	friend struct Singleton<Core>;
 
 	void DumpCapturingProgress();
 	void SendHandshakeResponse(CaptureStatus::Type status);
@@ -212,8 +211,7 @@ public:
 	bool IsValidMask(uint32_t mask);
 
 	// NOT Thread Safe singleton (performance)
-	//static BRO_INLINE Core& Get() { return Singleton<Core>::instance(); }
-	static BRO_INLINE Core& Get() { return notThreadSafeInstance; }
+	static BRO_INLINE Core& Get() { return Singleton<Core>::instance(); }
 
 	// Main Update Function
 	static void NextFrame() { Get().Update(); }
