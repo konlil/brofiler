@@ -50,10 +50,10 @@ namespace Profiler
 
 			LayoutRoot.Children.Add(rect);
 
-			foreach (EventNode child in node.Children)
-			{
-				InitNode(child, frameStartMS, level + 1);
-			}
+            foreach (EventNode child in node.Children)
+            {
+                InitNode(child, frameStartMS, level + 1);
+            }
 		}
 
 		void Init()
@@ -64,6 +64,16 @@ namespace Profiler
 				LayoutRoot.Children.Clear();
 
 				double frameStartMS = frame.Header.StartMS;
+
+                //double height = FrameHeightConverter.Convert(frame.Header.Duration);
+                //Rectangle rect = new Rectangle();
+                //rect.Width = double.NaN;
+                //rect.Width = height;
+                //if (height > 6.0)
+                //{
+                //    rect.Fill = new SolidColorBrush(Colors.Fuchsia);
+                //    LayoutRoot.Children.Add(rect);
+                //}
 
 				foreach (EventNode node in frame.CategoriesTree.Children)
 				{
