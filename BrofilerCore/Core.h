@@ -204,12 +204,6 @@ public:
 	// Check is registered thread
 	bool IsCurrentThreadRegistered();
 
-	// Set global capture mask
-	void SetCaptureMask(uint32_t mask);
-
-	// Check with capture mask
-	bool IsValidMask(uint32_t mask);
-
 	// NOT Thread Safe singleton (performance)
 	static BRO_INLINE Core& Get() { return Singleton<Core>::instance(); }
 

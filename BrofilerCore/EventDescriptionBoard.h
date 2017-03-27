@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.h"
 #include "Serialization.h"
+#include "Singleton.h"
 
 namespace Brofiler
 {
@@ -10,7 +11,9 @@ struct EventDescription;
 class EventDescriptionBoard
 {
 	std::vector<EventDescription*> board;
-	static EventDescriptionBoard instance;
+	EventDescriptionBoard() {}
+
+	friend struct Singleton<EventDescriptionBoard>;
 public:
 	EventDescription* CreateDescription();
 
