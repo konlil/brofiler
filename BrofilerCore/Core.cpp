@@ -263,20 +263,6 @@ bool Core::IsCurrentThreadRegistered()
 	return false;
 }
 
-bool Core::IsValidMask(uint32_t mask)
-{
-	Platform::ScopedGuard guard(lock);
-	return (capture_mask & mask) == mask;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Core::SetCaptureMask(uint32_t mask)
-{
-	Platform::ScopedGuard guard(lock);
-	capture_mask = mask;
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //bool Core::RegisterThread(const ThreadDescription& description, EventStorage** slot)
 bool Core::RegisterThread(const ThreadDescription& description)

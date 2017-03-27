@@ -9,6 +9,19 @@ namespace Brofiler
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static Platform::Mutex g_lock;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+uint32_t EventDescription::s_capture_mask = 0xFFFFFFFF;
+void EventDescription::SetGlobalCaptureMask(uint32_t global_mask)
+{
+	Platform::ScopedGuard guard(g_lock);
+	EventDescription::s_capture_mask = global_mask;
+}
+
+bool EventDescription::IsValidMask(uint32_t mask)
+{
+	Platform::ScopedGuard guard(g_lock);
+	return (EventDescription::s_capture_mask & mask) == mask;
+}
+
 EventDescription* EventDescription::Create(uint32_t mask, const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor /*= Color::Null*/)
 {
 	Platform::ScopedGuard guard(g_lock);
@@ -33,14 +46,14 @@ EventDescription& EventDescription::operator=(const EventDescription&)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EventData* Event::Start(const EventDescription& description)
 {
+	if (!EventDescription::IsValidMask(description.c_mask))
+	{
+		return nullptr;
+	}
+	
 	if (!Core::Get().IsCurrentThreadRegistered())
 	{
 		Platform::Log("[Brofiler][Warning] Event (%s @%s,line %d) start from unregistered thread. \n", description.name, description.file, description.line);
-		return nullptr;
-	}
-
-	if (!Core::Get().IsValidMask(description.c_mask))
-	{
 		return nullptr;
 	}
 
