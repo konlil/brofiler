@@ -19,7 +19,7 @@ void EventDescription::SetGlobalCaptureMask(uint32_t global_mask)
 bool EventDescription::IsValidMask(uint32_t mask)
 {
 	Platform::ScopedGuard guard(g_lock);
-	return (EventDescription::s_capture_mask & mask) == mask;
+	return (EventDescription::s_capture_mask == 0) || (EventDescription::s_capture_mask & mask) == mask;
 }
 
 EventDescription* EventDescription::Create(uint32_t mask, const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor /*= Color::Null*/)

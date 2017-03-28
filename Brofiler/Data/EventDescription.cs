@@ -42,14 +42,6 @@ namespace Profiler.Data
         public bool IsSampling
         {
             get { return isSampling; }
-            set
-            {
-                if (isSampling != value)
-                {
-                    ProfilerClient.Get().SendMessage(new TurnSamplingMessage(id, value));
-                    isSampling = value;
-                }
-            }
         }
 
         private int id;

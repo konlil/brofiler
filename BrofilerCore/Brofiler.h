@@ -313,6 +313,15 @@ struct ThreadScope
 #define BRO_UNUSED(x) (void)(x)
 
 
+//Pre-defined Capture Mask
+#define BROFILER_MASK_FRAME		(1)
+#define BROFILER_MASK_UPDATE	(1 << 1)
+#define BROFILER_MASK_RENDER	(1 << 2)
+#define BROFILER_MASK_PHYSICS	(1 << 3)
+#define BROFILER_MASK_NETWORK	(1 << 4)
+#define BROFILER_MASK_AUDIO		(1 << 5)
+#define BROFILER_MASK_RESERVED_COUNT 10
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define BROFILER_SET_CAPTURE_MASK(MASK) ::Brofiler::EventDescription::SetGlobalCaptureMask(MASK);
 

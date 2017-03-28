@@ -39,7 +39,7 @@ public:
 	{
 		Start,
 		Stop,
-		//TurnSampling,
+		GlobalCaptureMask,
 		COUNT,
 	};
 
@@ -69,13 +69,11 @@ struct StopMessage : public Message<IMessage::Stop>
 	virtual void Apply() override;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//struct TurnSamplingMessage : public Message<IMessage::TurnSampling>
-//{
-//	int32_t index;
-//	byte isSampling;
-//
-//	static IMessage* Create(InputDataStream& stream);
-//	virtual void Apply() override;
-//};
+struct GlobalCaptureMaskMessage : public Message<IMessage::GlobalCaptureMask>
+{
+	uint32_t mask_value;
+	static IMessage* Create(InputDataStream&);
+	virtual void Apply() override;
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

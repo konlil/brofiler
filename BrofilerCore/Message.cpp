@@ -37,7 +37,7 @@ class MessageFactory
 
 		RegisterMessage<StartMessage>();
 		RegisterMessage<StopMessage>();
-		//RegisterMessage<TurnSamplingMessage>();
+		RegisterMessage<GlobalCaptureMaskMessage>();
 
 		for (uint32_t msg = 0; msg < IMessage::COUNT; ++msg)
 		{
@@ -129,17 +129,16 @@ IMessage* StopMessage::Create(InputDataStream&)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//IMessage* TurnSamplingMessage::Create( InputDataStream& stream )
-//{
-//	TurnSamplingMessage* msg = new TurnSamplingMessage();
-//	stream >> msg->index;
-//	stream >> msg->isSampling;
-//	return msg;
-//}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//void TurnSamplingMessage::Apply()
-//{
-//	EventDescriptionBoard::Get().SetSamplingFlag(index, isSampling != 0);
-//}
+IMessage* GlobalCaptureMaskMessage::Create(InputDataStream& stream)
+{
+	GlobalCaptureMaskMessage* msg = new GlobalCaptureMaskMessage();
+	stream >> msg->mask_value;
+	return msg;
+}
+
+void GlobalCaptureMaskMessage::Apply()
+{
+	EventDescription::SetGlobalCaptureMask(mask_value);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -12,24 +12,6 @@ EventDescriptionBoard& EventDescriptionBoard::Get()
 	return Singleton<EventDescriptionBoard>::instance();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//void EventDescriptionBoard::SetSamplingFlag( int index, bool flag )
-//{ 
-//	Platform::ScopedGuard guard(g_lock);
-//	BRO_VERIFY(index < (int)board.size(), "Invalid EventDescription index", return);
-//
-//	if (index < 0)
-//	{
-//		for(auto it = board.begin(); it != board.end(); ++it)
-//		{
-//			EventDescription* desc = *it;
-//			desc->isSampling = flag;
-//		}
-//	} else
-//	{
-//		board[index]->isSampling = flag;
-//	}
-//}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const std::vector<EventDescription*>& EventDescriptionBoard::GetEvents() const
 {
 	return board;

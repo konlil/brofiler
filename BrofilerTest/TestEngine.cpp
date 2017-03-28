@@ -62,7 +62,7 @@ bool Engine::Frame()
 
 void Engine::Update()
 {
-	BROFILER_CATEGORY("Update", Brofiler::Color::Chartreuse);
+	BROFILER_CATEGORY_WITH_MASK(BROFILER_MASK_UPDATE, "Update", Brofiler::Color::Chartreuse);
 
 	UpdateInput();
 
@@ -79,14 +79,17 @@ void Engine::Update()
 
 void Engine::Render()
 {
-	BROFILER_CATEGORY("Draw", Brofiler::Color::Beige);
+	BROFILER_CATEGORY_WITH_MASK(BROFILER_MASK_RENDER, "Draw", Brofiler::Color::Beige);
 	Draw();
 }
+
+#define BROFILER_MASK_UPDATE_INPUT (1<< (BROFILER_MASK_RESERVED_COUNT+1))
+#define BROFILER_MASK_UPDATE_SCENE (1<< (BROFILER_MASK_RESERVED_COUNT+2))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Engine::UpdateInput()
 {
-	BROFILER_CATEGORY("UpdateInput", Brofiler::Color::SteelBlue);
+	BROFILER_CATEGORY_WITH_MASK(BROFILER_MASK_UPDATE | BROFILER_MASK_UPDATE_INPUT, "UpdateInput", Brofiler::Color::SteelBlue);
 	SlowFunction2();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +112,7 @@ void Engine::UpdateTasks()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Engine::UpdateScene()
 {
-	BROFILER_CATEGORY("UpdateScene", Brofiler::Color::SkyBlue);
+	BROFILER_CATEGORY_WITH_MASK(BROFILER_MASK_UPDATE | BROFILER_MASK_UPDATE_SCENE, "UpdateScene", Brofiler::Color::SkyBlue);
 	SlowFunction<REPEAT_COUNT>();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

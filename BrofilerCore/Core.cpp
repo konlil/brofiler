@@ -54,10 +54,10 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 	{
 		const EventData* rootEvent = nullptr;
 
-		Platform::Log("[Brofiler]DumpEvents ------------ %d \n", entry.eventBuffer.Size());
+		//Platform::Log("[Brofiler]DumpEvents ------------ %d \n", entry.eventBuffer.Size());
 		entry.eventBuffer.ForEach([&](const EventData& data)
 		{
-			Platform::Log("[Brofiler]DumpEvents, duration: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
+			//Platform::Log("[Brofiler]DumpEvents, duration: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 			if (data.finish >= data.start && data.start >= timeSlice.start && timeSlice.finish >= data.finish)
 			{
 				if (!rootEvent)
@@ -67,7 +67,7 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 				} 
 				else if (rootEvent->finish < data.finish)
 				{
-					Platform::Log("[Brofiler]DumpEvents, --- change root: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
+					//Platform::Log("[Brofiler]DumpEvents, --- change root: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 					scope.Send();
 
 					rootEvent = &data;
@@ -80,7 +80,7 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 			}
 		});
 
-		Platform::Log("[Brofiler]DumpEvents, header duration: %f ms\n", rootEvent->Duration());
+		//Platform::Log("[Brofiler]DumpEvents, header duration: %f ms\n", rootEvent->Duration());
 		scope.Send();
 	}
 }

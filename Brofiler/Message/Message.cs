@@ -132,7 +132,7 @@ namespace Profiler
     {
         Start,
         Stop,
-        TurnSampling,
+        GlobalCaptureMask,
         SetupHook,
     }
 
@@ -172,29 +172,26 @@ namespace Profiler
         }
     }
 
-    class TurnSamplingMessage : Message
+    class GlobalCaptureMaskMessage : Message
     {
-        Int32 eventID;
-        bool isActive;
+        UInt32 capture_mask;
 
-        public TurnSamplingMessage(Int32 eventID, bool isActive)
+        public GlobalCaptureMaskMessage(UInt32 mask)
         {
-            this.eventID = eventID;
-            this.isActive = isActive;
+            this.capture_mask = mask;
         }
 
         public override Int32 GetMessageType()
         {
-            return (Int32)MessageType.TurnSampling;
+            return (Int32)MessageType.GlobalCaptureMask;
         }
 
         public override void Write(BinaryWriter writer)
         {
             base.Write(writer);
-            writer.Write(eventID);
-            writer.Write(isActive);
+            writer.Write(capture_mask);
         }
-    }
+    }
 
     class SetupHookMessage : Message
     {

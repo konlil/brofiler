@@ -1,0 +1,71 @@
+﻿<Window x:Class="Profiler.MaskSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Set Capture Mask" Height="194" Width="400" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Grid ShowGridLines="False" Grid.Row="0" Margin="3">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <CheckBox Tag="0" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="0">0</CheckBox>
+            <CheckBox Tag="1" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="1">1</CheckBox>
+            <CheckBox Tag="2" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="2">2</CheckBox>
+            <CheckBox Tag="3" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="3">3</CheckBox>
+            <CheckBox Tag="4" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="4">4</CheckBox>
+            <CheckBox Tag="5" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="5">5</CheckBox>
+            <CheckBox Tag="6" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="6">6</CheckBox>
+            <CheckBox Tag="7" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="0" Grid.Column="7">7</CheckBox>
+
+            <CheckBox Tag="8" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="0">8</CheckBox>
+            <CheckBox Tag="9" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="1">9</CheckBox>
+            <CheckBox Tag="10" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="2">10</CheckBox>
+            <CheckBox Tag="11" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="3">11</CheckBox>
+            <CheckBox Tag="12" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="4">12</CheckBox>
+            <CheckBox Tag="13" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="5">13</CheckBox>
+            <CheckBox Tag="14" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="6">14</CheckBox>
+            <CheckBox Tag="15" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="1" Grid.Column="7">15</CheckBox>
+
+            <CheckBox Tag="16" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="0">16</CheckBox>
+            <CheckBox Tag="17" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="1">17</CheckBox>
+            <CheckBox Tag="18" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="2">18</CheckBox>
+            <CheckBox Tag="19" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="3">19</CheckBox>
+            <CheckBox Tag="20" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="4">20</CheckBox>
+            <CheckBox Tag="21" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="5">21</CheckBox>
+            <CheckBox Tag="22" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="6">22</CheckBox>
+            <CheckBox Tag="23" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="2" Grid.Column="7">23</CheckBox>
+
+            <CheckBox Tag="24" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="0">24</CheckBox>
+            <CheckBox Tag="25" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="1">25</CheckBox>
+            <CheckBox Tag="26" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="2">26</CheckBox>
+            <CheckBox Tag="27" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="3">27</CheckBox>
+            <CheckBox Tag="28" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="4">28</CheckBox>
+            <CheckBox Tag="29" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="5">29</CheckBox>
+            <CheckBox Tag="30" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="6">30</CheckBox>
+            <CheckBox Tag="31" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="7">31</CheckBox>
+        </Grid>
+        <Label x:Name="maskValueText" Content="Mask Value: 0" Grid.Row="1"></Label>
+        <StackPanel Grid.Row ="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="checkAllButton" Click="CheckAllButton_Click" Content="Check All" Margin="20,0,0,0" Width="77"></Button>
+            <Button x:Name="uncheckAllButton" Click="UncheckAllButton_Click" Content="UnCheck All" Margin="20,0,0,0" Width="94"></Button>
+            <Button x:Name="confirmButton" Click="ConfirmButton_Click" Content="OK" Margin="20,0,0,0" Width="83"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

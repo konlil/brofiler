@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Web;
 using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 
 namespace Profiler
 {
@@ -59,6 +60,10 @@ namespace Profiler
 
             this.Loaded += new RoutedEventHandler(TimeLine_Loaded);
 
+            System.Net.IPAddress defaultIP;
+            System.Net.IPAddress.TryParse(Properties.Settings.Default.DefaultIP, out defaultIP);
+            ProfilerClient.Get().IpAddress = defaultIP;
+            ProfilerClient.Get().Port = Properties.Settings.Default.DefaultPort;
 
             statusToError.Add(ETWStatus.ETW_ERROR_ACCESS_DENIED, new KeyValuePair<string, string>("ETW can't start: launch your game as administrator to collect context switches", "https://github.com/bombomby/brofiler/wiki/Event-Tracing-for-Windows"));
             statusToError.Add(ETWStatus.ETW_ERROR_ALREADY_EXISTS, new KeyValuePair<string, string>("ETW session already started (Reboot should help)", "https://github.com/bombomby/brofiler/wiki/Event-Tracing-for-Windows"));
@@ -450,9 +455,60 @@ namespace Profiler
             OnClearAllFrames();
         }
 
-        private void ClearSamplingButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private static bool ConvertText2Hex(string text, out UInt32 result)
         {
-            //ProfilerClient.Get().SendMessage(new TurnSamplingMessage(-1, false));
+            result = 0;
+            if (text == "" || text == "0" || text == "0x" || text == "0X")
+            {
+                return true;
+            }
+
+            if (text.Length > 2 && (text.StartsWith("0x") || text.StartsWith("0X") ))
+            {
+                text = text.Substring(2);
+                if (text.Length > 8) return false;
+
+                bool success = UInt32.TryParse(text, System.Globalization.NumberStyles.HexNumber, new System.Globalization.CultureInfo("en-US"), out result);
+                return success;
+            }
+
+            return false;
+        }
+        
+        private string MaskText_LastValid = "";
+        private void MaskText_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            UInt32 mask = 0;
+            if (!ConvertText2Hex(MaskText.Text, out mask))
+            {
+                MaskText.Text = MaskText_LastValid;
+                MessageBox.Show("Invalid input, must be hex style of uint32 value");
+            }
+            else
+            {
+                MaskText_LastValid = MaskText.Text;
+            }
+        }
+
+        private void MaskText_DoubleClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UInt32 old_mask = 0;
+            ConvertText2Hex(MaskText.Text, out old_mask);
+
+            Profiler.MaskSetting settingDlg = new Profiler.MaskSetting();
+            settingDlg.MaskValue = old_mask;
+            settingDlg.ShowDialog();
+            Console.WriteLine("mask: {0}", settingDlg.MaskValue);
+            MaskText.Text = settingDlg.MaskString;
+        }
+
+        private void GlobalCaptureMaskButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UInt32 mask = 0;
+            if (ConvertText2Hex(MaskText.Text, out mask))
+            {
+                ProfilerClient.Get().SendMessage(new GlobalCaptureMaskMessage(mask));
+            }
         }
 
         private void ClearHooksButton_Click(object sender, System.Windows.RoutedEventArgs e)

@@ -120,9 +120,10 @@
             <Button x:Name="ClearButton" Click="ClearButton_Click" HorizontalAlignment="Left" Width="24" Height="24" VerticalAlignment="Center" ToolTip="Clear Active Session" Margin="1,0,0,0" Padding="-6">
                 <ContentControl Style="{StaticResource appbar_delete}" />
             </Button>
-            <Button x:Name="ClearSampling" Click="ClearSamplingButton_Click" HorizontalAlignment="Left" Width="24" Height="24" VerticalAlignment="Center" ToolTip="Clear All Sampling Flags" Margin="1,0,0,0" Padding="-6">
-                <ContentControl Style="{StaticResource appbar_clean}" />
+            <Button x:Name="SetGlbalCaptureMask" Click="GlobalCaptureMaskButton_Click" HorizontalAlignment="Left" Width="24" Height="24" VerticalAlignment="Center" ToolTip="Set global capture mask" Margin="1,0,0,0" Padding="-6">
+                <ContentControl Style="{StaticResource appbar_filter}" />
             </Button>
+            <TextBox x:Name="MaskText" Width="80" MouseDoubleClick="MaskText_DoubleClick" TextChanged="MaskText_TextChanged" ToolTip="Global capture mask" Text="0xFFFFFFFF" VerticalContentAlignment="Center" />
             <local:PlatformSelector x:Name="PlatformCombo" Margin="4,0,0,0" VerticalAlignment="Center" />
             <StackPanel x:Name="warningBlock"  Orientation="Horizontal">
                 <Image x:Name="warningIcon" Source="Icons/Warning-icon.png" Margin="5,0,0,0" Width="24" Height="24" />
