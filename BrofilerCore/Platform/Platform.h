@@ -18,6 +18,11 @@
 #elif defined( BF_PLATFORM_ANDROID )
 #include "Platform/Posix_Time.h"
 #include "Platform/Posix_Memory.h"
+#elif defined(BF_PLATFORM_LINUX)
+#include "Platform/Posix_Time.h"
+#include "Platform/Posix_Memory.h"
+#include "Platform/Posix_Tls.h"
+#include <string.h>
 #else
 #error "Unrecognzied Platform"
 #endif

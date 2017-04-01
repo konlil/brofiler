@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/gzweikun/Git/brofiler/BrofilerLinuxTest/main.cpp
+iostream
+-
+Brofiler.h
+/home/gzweikun/Git/brofiler/BrofilerLinuxTest/Brofiler.h
+TestEngine.h
+/home/gzweikun/Git/brofiler/BrofilerLinuxTest/TestEngine.h
+
+BrofilerCore/Brofiler.h
+stdint.h
+-
+
+BrofilerTest/TestEngine.h
+array
+-
+thread
+-
+

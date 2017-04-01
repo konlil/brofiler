@@ -9,6 +9,9 @@ elseif(WIN32)
 	message(STATUS "win32...")
 elseif(APPLE)
 	message(STATUS "mac...")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	add_definitions("-DLINUX=1")
+	message(STATUS "linux...")
 endif()
 
 # 配置类型只支持Debug和带调试信息的Release
@@ -25,7 +28,7 @@ set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # 项目信息
-project (Brofiler)
+#project (Brofiler)
 
 # 包含公用定义的模块 CMake/Common.cmake
 include(Common)
@@ -38,4 +41,6 @@ if(WIN32)
 	add_subdirectory(BrofilerWindowsTest)
 elseif(IOS)
 	add_subdirectory(BrofilerIOSTest)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	add_subdirectory(BrofilerLinuxTest)
 endif()

@@ -11,6 +11,8 @@
 #else
 #error "Unknown Apple Platform"
 #endif
+#elif defined(LINUX)
+#define BF_PLATFORM_LINUX (1)
 #endif
 
 // Compiler family

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/BrofilerLinuxTest.dir/main.cpp.o  -o BrofilerLinuxTest -rdynamic ../BrofilerCore/libBrofilerCore.a ../BrofilerTest/libBrofilerTest.a -lpthread 
