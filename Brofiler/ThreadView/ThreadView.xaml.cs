@@ -215,6 +215,8 @@ namespace Profiler
                 offset += row.Height;
             }
 
+            backgroundLines.AddLine(new Point(0.0, 0.0), new Point(0.0, 1.0), ThreadRowLine.Color);
+
             BackgroundMesh = backgroundBuilder.Freeze(surface.RenderDevice);
             GridMesh = backgroundLines.Freeze(surface.RenderDevice);
         }
