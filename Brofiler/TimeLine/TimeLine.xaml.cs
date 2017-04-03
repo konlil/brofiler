@@ -312,6 +312,18 @@ namespace Profiler
             RaiseEvent(args);
         }
 
+        public void ScrollToItem(Data.Frame frame)
+        {
+            for (int i = 0; i < frames.Count; i++)
+            {
+                if (frames[i] == frame)
+                {
+                    frameList.SelectedItem = frames[i];
+                    frameList.ScrollIntoView(frames[i]);
+                }
+            }
+        }
+
         public class FocusFrameEventArgs : RoutedEventArgs
         {
             public Data.Frame Frame { get; set; }

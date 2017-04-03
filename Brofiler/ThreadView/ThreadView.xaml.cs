@@ -172,7 +172,7 @@ namespace Profiler
                 Label labelName = new Label() { Content = row.Name, Margin = margin, Padding = new Thickness(), Height = row.Height / RenderSettings.dpiScaleY, VerticalContentAlignment = VerticalAlignment.Center };
                 labelName.Foreground = LabelForeground;
                 labelName.BorderBrush = ThreadRowLine;
-                labelName.BorderThickness = new Thickness(0,0,1,1);
+                labelName.BorderThickness = new Thickness(0,1,1,1);
 
                 Grid.SetRow(labelName, threadIndex);
 
