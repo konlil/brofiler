@@ -122,7 +122,7 @@ namespace Brofiler
 
 		void Close()
 		{
-			if (!IsValidSocket(listenSocket))
+			if (IsValidSocket(listenSocket))
 			{
 				CloseSocket(listenSocket);
 			}
@@ -147,7 +147,7 @@ namespace Brofiler
 		{ 
 			Platform::ScopedGuard guard(lock);
 
-			if (!IsValidSocket(acceptSocket))
+			if (IsValidSocket(acceptSocket))
 			{
 				CloseSocket(acceptSocket);
 			}
@@ -220,7 +220,8 @@ namespace Brofiler
 			if (!IsValidSocket(acceptSocket))
 				return false;
 
-			if (::send(acceptSocket, buf, (int)len, 0) >= 0)
+			int send_rtn = ::send(acceptSocket, buf, (int)len, 0);
+			if ( send_rtn == SOCKET_ERROR)
 			{
 				Disconnect();
 				return false;
