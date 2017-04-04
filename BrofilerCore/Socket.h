@@ -152,6 +152,7 @@ namespace Brofiler
 				CloseSocket(acceptSocket);
 			}
 		}
+
 	public:
 		Socket() : acceptSocket(0), listenSocket(0)
 		{
@@ -166,6 +167,14 @@ namespace Brofiler
 		{
 			Disconnect();
 			Close();
+		}
+
+		void AbortAcceptor()
+		{
+			if (IsValidSocket(listenSocket))
+			{
+				CloseSocket(listenSocket);
+			}
 		}
 
 		bool Bind(short startPort, short portRange)
@@ -191,14 +200,17 @@ namespace Brofiler
 			BRO_ASSERT(result == 0, "Can't start listening");
 		}
 
-		void Accept()
+		bool Accept()
 		{ 
 			TcpSocket incomingSocket = ::accept(listenSocket, nullptr, nullptr);
-			BRO_ASSERT(IsValidSocket(incomingSocket), "Can't accept socket");
+			if (!IsValidSocket(incomingSocket))
+				return false;
+			//BRO_ASSERT(IsValidSocket(incomingSocket), "Can't accept socket");
 
 			Platform::ScopedGuard guard(lock);
 			acceptSocket = incomingSocket;
             Platform::Log("[info] accept socket.\n");
+			return true;
 		}
 
 		bool Send(const char *buf, size_t len)
