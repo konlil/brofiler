@@ -8,10 +8,8 @@
 #elif defined( BF_PLATFORM_OSX )
 #include "Platform/Posix_Mutex.h"
 #include "Platform/Posix_Thread.h"
-#elif defined( BF_PLATFORM_IOS )
+#elif defined( BF_PLATFORM_IOS ) || defined( BF_PLATFORM_ANDROID )
 #include "Platform/Posix_Mutex.h"
-#include "Platform/Posix_Thread.h"
-#elif defined( BF_PLATFORM_ANDROID )
 #include "Platform/Posix_Thread.h"
 #else
 #error "Unrecognzied Platform"

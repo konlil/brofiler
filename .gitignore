@@ -3,6 +3,7 @@ Brofiler/obj/
 Build/
 MyBuild/
 MyBuildIOS/
+MyBuildAndroid/
 *.suo
 *.user
 Publish/

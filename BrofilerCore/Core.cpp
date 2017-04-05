@@ -406,7 +406,7 @@ bool IsSleepOnlyScope(const ScopeData& scope)
 	for(auto it = events.begin(); it != events.end(); ++it)
 	{
 		const EventData& data = *it;
-
+		//TODO: cannot understand this line..
 		if (data.description->color != Color::White)
 		{
 			return false;
@@ -420,6 +420,7 @@ void ScopeData::Send()
 {
 	if (!events.empty() || !categories.empty())
 	{
+		//TODO
 		if (!IsSleepOnlyScope(*this))
 		{
 			OutputDataStream frameStream;

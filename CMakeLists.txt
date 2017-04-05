@@ -1,15 +1,5 @@
-# CMake 最低版本号
+﻿# CMake 最低版本号
 cmake_minimum_required(VERSION 3.1)
-
-if(IOS OR IOS_SIM)
-	message(STATUS "ios...")
-elseif(ANDROID OR ANDROID_SIM)
-	message(STATUS "android...")
-elseif(WIN32)
-	message(STATUS "win32...")
-elseif(APPLE)
-	message(STATUS "mac...")
-endif()
 
 # 配置类型只支持Debug和带调试信息的Release
 set(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release" CACHE STRING "" FORCE)
@@ -24,11 +14,26 @@ set (CMAKE_CXX_STANDARD 11)
 # CMAKE_MODULE_PATH 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
+# 包含公用定义的模块 CMake/Common.cmake
+include(Common)
+
 # 项目信息
 project (Brofiler)
 
-# 包含公用定义的模块 CMake/Common.cmake
-include(Common)
+# 这时候toolchain已经定义好了平台
+if(IOS OR IOS_SIM)
+	message(STATUS "ios...")
+	set(PLATFORM "ios")
+elseif(ANDROID OR ANDROID_SIM)
+	message(STATUS "android...")
+	set(PLATFORM "android")
+elseif(WIN32)
+	message(STATUS "win32...")
+	set(PLATFORM "win32")
+elseif(APPLE)
+	message(STATUS "mac...")
+	set(PLATFORM "mac")
+endif()
 
 # 添加子目录
 add_subdirectory(BrofilerCore)

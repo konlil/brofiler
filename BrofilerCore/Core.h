@@ -62,6 +62,7 @@ struct EventStorage
 	CategoryBuffer categoryBuffer; 
 	SynchronizationBuffer synchronizationBuffer;
 
+	//TODO: sampling is deprecated..
 	Platform::Atomic<uint32_t> isSampling;
 
 	EventStorage();

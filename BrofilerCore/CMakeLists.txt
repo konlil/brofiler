@@ -93,6 +93,13 @@ include_directories("${PROJECT_SOURCE_DIR}/BrofilerCore")
 
 # 自定义宏
 add_definitions(-DBROFILER_LIB=1)
+if (${PLATFORM} STREQUAL ${PLATFORM_WIN32})
+    add_definitions(-DBF_PLATFORM_WINDOWS=1)
+elseif (${PLATFORM} STREQUAL ${PLATFORM_IOS})
+    add_definitions(-DBF_PLATFORM_IOS=1)
+elseif (${PLATFORM} STREQUAL ${PLATFORM_ANDROID})
+    add_definitions(-DBF_PLATFORM_ANDROID=1)
+endif()
 
 # 生成链接库
 add_library(BrofilerCore ${SOURCE_FILES})

@@ -11,6 +11,11 @@
 #else
 #error "Unrecognzied Platform"
 #endif
+
+#if defined(BF_PLATFORM_ANDROID)
+#include <android/log.h>
+#endif
+
 #include "Thread.h"
 #include "Log.h"
 

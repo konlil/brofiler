@@ -31,7 +31,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 typedef int TcpSocket;
-
+#define SOCKET_ERROR -1
 
 #elif USE_WINDOWS_SOCKETS
 
