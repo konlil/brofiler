@@ -6,6 +6,11 @@ using System.Windows;
 
 namespace Profiler
 {
+    public class Globals
+    {
+        public static double HotDuration = 30.0;
+    }
+
 	public class ProfilerGlobalSettings : DependencyObject
 	{
 		public static readonly DependencyProperty ShowMemoryProperty =

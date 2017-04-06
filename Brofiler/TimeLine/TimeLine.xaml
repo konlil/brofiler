@@ -130,6 +130,11 @@
                 <TextBlock VerticalAlignment="Center" TextTrimming="WordEllipsis" Width="Auto"><Hyperlink x:Name="warningUrl" RequestNavigate="Hyperlink_RequestNavigate"><Run x:Name="warningText" Text="ClickMe"/></Hyperlink></TextBlock>
             </StackPanel>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="PrevFrame" Click="PrevFrame_Click" Content="Prev" Margin="1,0,0,0" Width="40"></Button>
+            <Button x:Name="NextFrame" Click="NextFrame_Click" Content="Next" Margin="1,0,0,0" Width="40"></Button>
+            <TextBox x:Name="DurationFilterText" Text="30 :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="1,0,0,0" Width="60"></TextBox>
+        </StackPanel>
         <TextBlock x:Name="StatusText" TextWrapping="Wrap" Text="Capturing Frame 34" FontSize="20" TextAlignment="Center" Margin="0,2,0,0" Grid.Row="1" FontStyle="Italic" TextDecorations="{x:Null}" TextOptions.TextHintingMode="Animated" FontWeight="SemiBold" Foreground="Black" Visibility="Collapsed">
             <TextBlock.Background>
                 <LinearGradientBrush EndPoint="12,3" StartPoint="0,0" MappingMode="Absolute" SpreadMethod="Repeat" Opacity="0.405">

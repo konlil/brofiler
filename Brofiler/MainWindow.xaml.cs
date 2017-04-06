@@ -49,6 +49,8 @@ namespace Profiler
                 {
                     Data.EventFrame frame = dataContext as Data.EventFrame;
                     ThreadView.FocusOn(frame, null);
+
+                    timeLine.ScrollToItem(frame);
                 }
             }
         }
