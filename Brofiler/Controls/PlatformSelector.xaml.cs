@@ -87,7 +87,7 @@ namespace Profiler
 
             Dictionary<string, string> icon_dict = new Dictionary<string, string>();
             icon_dict.Add("iOS", "appbar_iphone");
-            icon_dict.Add("Android", "appbar_iphone");
+            icon_dict.Add("Android", "appbar_os_android");
             icon_dict.Add("Linux", "appbar_network");
             icon_dict.Add("PS4", "appbar_social_playstation");
             icon_dict.Add("Xbox", "appbar_controller_xbox");

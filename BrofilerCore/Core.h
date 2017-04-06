@@ -168,6 +168,8 @@ class Core
 
 	void CleanupThreads();
 public:
+	void Init();
+
 	void Activate(bool active);
 	bool isActive;
 
