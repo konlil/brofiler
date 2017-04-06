@@ -18,7 +18,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 include(Common)
 
 # 项目信息
-project (Brofiler)
+#project (Brofiler)
 
 # 这时候toolchain已经定义好了平台
 if(IOS OR IOS_SIM)
@@ -33,6 +33,9 @@ elseif(WIN32)
 elseif(APPLE)
 	message(STATUS "mac...")
 	set(PLATFORM "mac")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	add_definitions("-DLINUX=1")
+	message(STATUS "linux...")
 endif()
 
 # 添加子目录
@@ -43,4 +46,6 @@ if(WIN32)
 	add_subdirectory(BrofilerWindowsTest)
 elseif(IOS)
 	add_subdirectory(BrofilerIOSTest)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	add_subdirectory(BrofilerLinuxTest)
 endif()

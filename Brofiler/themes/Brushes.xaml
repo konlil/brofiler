@@ -21,25 +21,7 @@
     -->
 
     <SolidColorBrush x:Key="BroForeground" Color="#FF171717" />
+    <SolidColorBrush x:Key="BroAlternative" Color="LightGray" />
     <SolidColorBrush x:Key="BroFrameSelection" Color="Black" />
-    <SolidColorBrush x:Key="BroFrameHover" Color="Yellow" />
-    
-    <SolidColorBrush x:Key="BroThreadViewLableForeground" Color="Black"/>
-    <SolidColorBrush x:Key="BroThreadViewHeaderBackground" Color="White"/>
-    <SolidColorBrush x:Key="BroThreadViewHeaderTextColor" Color="Black"/>
-    <SolidColorBrush x:Key="BroThreadViewHeaderBorderColor" Color="Black"/>
-    <SolidColorBrush x:Key="BroThreadViewRowEven" Color="#FFEEEEEE"/>
-    <SolidColorBrush x:Key="BroThreadViewRowOdd" Color="#FFDDDDDD"/>
-    <SolidColorBrush x:Key="BroThreadViewRowLine" Color="DarkGray"/>
-    
-    <!--
-    <SolidColorBrush x:Key="BroThreadViewLableForeground" Color="White"/>
-    <SolidColorBrush x:Key="BroThreadViewHeaderBackground" Color="Black"/>
-    <SolidColorBrush x:Key="BroThreadViewHeaderTextColor" Color="White"/>
-    <SolidColorBrush x:Key="BroThreadViewHeaderBorderColor" Color="White"/>
-    <SolidColorBrush x:Key="BroThreadViewRowEven" Color="#191919"/>
-    <SolidColorBrush x:Key="BroThreadViewRowOdd" Color="#202020"/>
-    <SolidColorBrush x:Key="BroThreadViewRowLine" Color="DarkGray"/>
-    -->
-    
+    <SolidColorBrush x:Key="BroFrameHover" Color="Black" />
 </ResourceDictionary>

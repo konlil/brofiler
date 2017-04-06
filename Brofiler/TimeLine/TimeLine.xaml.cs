@@ -312,18 +312,6 @@ namespace Profiler
             RaiseEvent(args);
         }
 
-        public void ScrollToItem(Data.Frame frame)
-        {
-            for (int i = 0; i < frames.Count; i++)
-            {
-                if (frames[i] == frame)
-                {
-                    frameList.SelectedItem = frames[i];
-                    frameList.ScrollIntoView(frames[i]);
-                }
-            }
-        }
-
         public class FocusFrameEventArgs : RoutedEventArgs
         {
             public Data.Frame Frame { get; set; }
@@ -573,115 +561,6 @@ namespace Profiler
             StartButton.IsEnabled = false;
             StopButton.IsEnabled = true;
         }
-
-        private DurationFilter duration_filter;
-        //{
-        //    get;
-        //    set{ DurationFilterText.Text = string.Format("{0}:{1}", value.floor, value.ceil); }
-        //}
-
-        private bool CheckFilterInput(string text)
-        {
-            if (!text.Contains(":")) return false;
-            var strs = text.Split(':');
-            if (strs.Length != 2) return false;
-
-            if (strs[0] == "" || strs[1] == "") return true;
-
-            try
-            {
-                double floor = Convert.ToDouble(strs[0]);
-                double ceil = Convert.ToDouble(strs[1]);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private DurationFilter ParseDurationFilter(string text)
-        {
-            DurationFilter filter = new DurationFilter();
-            var strs = text.Split(':');
-            if (strs[0] == "")
-                filter.floor = 0;
-            else
-                filter.floor = Convert.ToDouble(strs[0]);
-
-            if (strs[1] == "")
-                filter.ceil = double.MaxValue;
-            else
-                filter.ceil = Convert.ToDouble(strs[1]);
-            return filter;
-        }
-
-        private void NextFilteredFrame()
-        {
-            if (frameList.SelectedIndex == frames.Count - 1)
-                return;
-
-            for (int i = frameList.SelectedIndex + 1; i < frames.Count; i++)
-            {
-                if ( frames[i].Duration >= duration_filter.floor && frames[i].Duration < duration_filter.ceil)
-                {
-                    frameList.SelectedItem = frames[i];
-                    frameList.ScrollIntoView(frames[i]);
-                    break;
-                }
-            }
-        }
-
-        private void PrevFilteredFrame()
-        {
-            if (frameList.SelectedIndex == 0)
-                return;
-
-            for (int i = frameList.SelectedIndex - 1; i >= 0; i--)
-            {
-                if (frames[i].Duration >= duration_filter.floor && frames[i].Duration < duration_filter.ceil)
-                {
-                    frameList.SelectedItem = frames[i];
-                    frameList.ScrollIntoView(frames[i]);
-                    break;
-                }
-            }
-        }
-
-        private void PrevFrame_Click(object sender, RoutedEventArgs e)
-        {
-            if (!CheckFilterInput(DurationFilterText.Text))
-            {
-                MessageBox.Show("Invalid filter text, should be {double}:{double}");
-                return;
-            }
-            duration_filter = ParseDurationFilter(DurationFilterText.Text);
-            //Console.WriteLine("filter: {0}, {1}", duration_filter.floor, duration_filter.ceil);
-            PrevFilteredFrame();
-        }
-
-        private void NextFrame_Click(object sender, RoutedEventArgs e)
-        {
-            if (!CheckFilterInput(DurationFilterText.Text))
-            {
-                MessageBox.Show("Invalid filter text, should be {%f}:{%f}");
-                return;
-            }
-            duration_filter = ParseDurationFilter(DurationFilterText.Text);
-            //Console.WriteLine("filter: {0}, {1}", duration_filter.floor, duration_filter.ceil);
-            NextFilteredFrame();
-        }
-
-        private void DurationFilterText_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-    }
-
-    public class DurationFilter
-    {
-        public double floor { get; set; }
-        public double ceil { get; set; }
     }
 
     public class FrameHeightConverter : IValueConverter
