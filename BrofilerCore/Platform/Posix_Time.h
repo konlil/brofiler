@@ -13,10 +13,6 @@
 #include <dirent.h>
 #include <stdint.h>
 
-#if defined(BF_PLATFORM_LINUX)
-#include <time.h>
-#endif
-
 namespace Brofiler
 {
 namespace Platform

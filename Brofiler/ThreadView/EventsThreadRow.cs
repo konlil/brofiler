@@ -12,7 +12,7 @@ namespace Profiler
     {
         ThreadDescription Description { get; set; }
         ThreadData EventData { get; set; }
-        int MaxDepth { get; set; }
+        public int MaxDepth { get; set; }
 
 		Mesh Mesh { get; set; }
 		Mesh SyncMesh { get; set; }
@@ -71,79 +71,80 @@ namespace Profiler
 			List<EventNode> rootCategories = new List<EventNode>();
 			List<EventNode> nodesToProcess = new List<EventNode>();
 
-			foreach (EventFrame frame in data.Events)
-			{
-				// Fill holes in timeline from regular events (not categories)
-				// ------------------------------------------------------------------------------------------------------
-				const double thresholdMs = 0.1;
+            foreach (EventFrame frame in data.Events)
+            {
+                // Fill holes in timeline from regular events (not categories)
+                // ------------------------------------------------------------------------------------------------------
+                const double thresholdMs = 0.1;
 
-				EventTree categoriesTree = frame.CategoriesTree;
-				rootCategories.Clear();
-				foreach (EventNode node in frame.CategoriesTree.Children)
-				{
-					rootCategories.Add(node);
-				}
+                EventTree categoriesTree = frame.CategoriesTree;
+                rootCategories.Clear();
+                foreach (EventNode node in frame.CategoriesTree.Children)
+                {
+                    rootCategories.Add(node);
+                }
 
-				if (rootCategories.Count != 0)
-				{
-					nodesToProcess.Clear();
-					foreach (EventNode node in frame.Root.Children)
-					{
-						nodesToProcess.Add(node);
-					}
+                if (rootCategories.Count != 0)
+                {
+                    nodesToProcess.Clear();
+                    foreach (EventNode node in frame.Root.Children)
+                    {
+                        nodesToProcess.Add(node);
+                    }
 
-					while(nodesToProcess.Count > 0)
-					{
-						EventNode node = nodesToProcess[0];
-						nodesToProcess.RemoveAt(0);
+                    while (nodesToProcess.Count > 0)
+                    {
+                        EventNode node = nodesToProcess[0];
+                        nodesToProcess.RemoveAt(0);
 
-						bool nodeIntersectWithCategories = false;
+                        bool nodeIntersectWithCategories = false;
 
-						foreach(EventNode categoryNode in rootCategories)
-						{
-							// drop nodes less than thresholdMs ms
-							if (node.Entry.Duration < thresholdMs)
-							{
-								nodeIntersectWithCategories = true;
-								break;
-							}
+                        foreach (EventNode categoryNode in rootCategories)
+                        {
+                            // drop nodes less than thresholdMs ms
+                            if (node.Entry.Duration < thresholdMs)
+                            {
+                                nodeIntersectWithCategories = true;
+                                break;
+                            }
 
-							// node is entirely inside the categoryNode
-							if (node.Entry.Start >= categoryNode.Entry.Start && node.Entry.Finish <= categoryNode.Entry.Finish)
-							{
-								nodeIntersectWithCategories = true;
-								break;
-							}
+                            // node is entirely inside the categoryNode
+                            if (node.Entry.Start >= categoryNode.Entry.Start && node.Entry.Finish <= categoryNode.Entry.Finish)
+                            {
+                                nodeIntersectWithCategories = true;
+                                break;
+                            }
 
-							// node is partially inside the categoryNode
-							if (node.Entry.Intersect(categoryNode.Entry))
-							{
-								foreach (EventNode tmp in node.Children)
-								{
-									nodesToProcess.Add(tmp);
-								}
+                            // node is partially inside the categoryNode
+                            if (node.Entry.Intersect(categoryNode.Entry))
+                            {
+                                foreach (EventNode tmp in node.Children)
+                                {
+                                    nodesToProcess.Add(tmp);
+                                }
 
-								nodeIntersectWithCategories = true;
-								break;
-							}
-						}
+                                nodeIntersectWithCategories = true;
+                                break;
+                            }
+                        }
 
-						if (nodeIntersectWithCategories == false && node.Entry.Duration >= thresholdMs)
-						{
-							// node is not intersect with any categoryNode (add to category tree)
-							EventNode fakeCategoryNode = new EventNode(frame.CategoriesTree, node.Entry);
+                        if (nodeIntersectWithCategories == false && node.Entry.Duration >= thresholdMs)
+                        {
+                            // node is not intersect with any categoryNode (add to category tree)
+                            EventNode fakeCategoryNode = new EventNode(frame.CategoriesTree, node.Entry);
 
-							node.Entry.SetOverrideColor( GenerateColorFromString(node.Entry.Description.FullName) );
-							
-							rootCategories.Add(fakeCategoryNode);
-							frame.CategoriesTree.Children.Add(fakeCategoryNode);
-						}
-					}
-				}
-				// ------------------------------------------------------------------------------------------------------
+                            node.Entry.SetOverrideColor(GenerateColorFromString(node.Entry.Description.FullName));
 
-				MaxDepth = Math.Max(frame.CategoriesTree.Depth, MaxDepth);
-			}
+                            rootCategories.Add(fakeCategoryNode);
+                            frame.CategoriesTree.Children.Add(fakeCategoryNode);
+                        }
+                    }
+                }
+
+                // ------------------------------------------------------------------------------------------------------
+
+                MaxDepth = Math.Max(frame.CategoriesTree.Depth, MaxDepth);
+            }
         }
 
         void BuildMeshNode(DirectX.DynamicMesh builder, ThreadScroll scroll, EventNode node, int level)
@@ -246,7 +247,7 @@ namespace Profiler
         }
 
         public override double Height { get { return RenderParams.BaseHeight * MaxDepth; } }
-		public override string Name { get { return string.Format("{0} ({1})", Description.Name, Description.ThreadID ); } }
+		public override string Name { get { return string.Format("{0}({1})", Description.Name, Description.ThreadID ); } }
 
         double TextDrawThreshold = 8.0 * RenderSettings.dpiScaleX;
         double TextDrawOffset = 1.5 * RenderSettings.dpiScaleY;
@@ -281,7 +282,7 @@ namespace Profiler
                     SyncWorkMesh.World = world;
                     canvas.Draw(SyncWorkMesh);
                 }
-
+                
                 Data.Utils.ForEachInsideInterval(EventData.Events, scroll.ViewTime, frame =>
                 {
                     frame.CategoriesTree.ForEachChild((node, level) =>
@@ -327,20 +328,17 @@ namespace Profiler
                         Point[] points = new Point[] { new Point(center - width, offset), new Point(center, offset - height), new Point(center + width, offset), new Point(center, offset + height) };
 
                         Color fillColor = (callstack.Reason == CallStackReason.AutoSample) ? CallstackColor : SystemCallstackColor;
-                        Color strokeColor = Colors.Black;
+                        //Color strokeColor = Colors.Black;
 
                         CallstackMeshPolys.AddRect(points, fillColor);
-                        CallstackMeshLines.AddRect(points, strokeColor);
+                        //CallstackMeshLines.AddRect(points, strokeColor);
                     });
 
                     CallstackMeshPolys.Update(canvas.RenderDevice);
-                    CallstackMeshLines.Update(canvas.RenderDevice);
-
-                    //CallstackMeshPolys.World = world;
-                    //CallstackMeshLines.World = world;
+                    //CallstackMeshLines.Update(canvas.RenderDevice);
 
                     canvas.Draw(CallstackMeshPolys);
-                    canvas.Draw(CallstackMeshLines);
+                    //canvas.Draw(CallstackMeshLines);
                 }
             }
 

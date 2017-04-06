@@ -8,8 +8,6 @@
 #include "Platform/Win_Time.h"
 #elif defined( BF_PLATFORM_OSX ) || defined( BF_PLATFORM_IOS ) || defined( BF_PLATFORM_ANDROID )
 #include "Platform/Posix_Time.h"
-#elif defined(BF_PLATFORM_LINUX)
-#include "Platform/Platform.h"
 #else
 #error "Unrecognzied Platform"
 #endif
