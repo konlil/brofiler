@@ -8,5 +8,13 @@
     <Setting Name="DefaultPort" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">31313</Value>
     </Setting>
+    <Setting Name="Targets" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;iOS, My iPhone, 10.242.88.196&lt;/string&gt;
+  &lt;string&gt;Android, Vivo R7, 10.242.18.151&lt;/string&gt;
+  &lt;string&gt;Linux, Linux, 192.168.45.101&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

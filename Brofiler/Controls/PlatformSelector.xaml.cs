@@ -79,11 +79,48 @@ namespace Profiler
             int defaultSelectionIndex = 0;
             platforms.Add(new PlatformDescription() { Name = Environment.MachineName, IP = ip, Icon = "appbar_os_windows_8" });
 
-            platforms.Add(new PlatformDescription() { Name = "PS4", IP = Platform.GetPS4Address(),  Icon = "appbar_social_playstation" });
-            platforms.Add(new PlatformDescription() { Name = "Xbox", IP = Platform.GetXONEAddress(), Icon = "appbar_controller_xbox" });
+            //platforms.Add(new PlatformDescription() { Name = "PS4", IP = Platform.GetPS4Address(),  Icon = "appbar_social_playstation" });
+            //platforms.Add(new PlatformDescription() { Name = "Xbox", IP = Platform.GetXONEAddress(), Icon = "appbar_controller_xbox" });
+            //platforms.Add(new PlatformDescription() { Name = "IPhone", IP = Platform.GetIPhoneAddress(), Icon = "appbar_iphone", Detailed = true });
+            //platforms.Add(new PlatformDescription() { Name = "Linux", IP = Platform.GetLinuxAddress(), Icon = "appbar_network", Detailed = true });
+
+
+            Dictionary<string, string> icon_dict = new Dictionary<string, string>();
+            icon_dict.Add("iOS", "appbar_iphone");
+            icon_dict.Add("Android", "appbar_iphone");
+            icon_dict.Add("Linux", "appbar_network");
+            icon_dict.Add("PS4", "appbar_social_playstation");
+            icon_dict.Add("Xbox", "appbar_controller_xbox");
+            icon_dict.Add("PC", "appbar_network");
+
+            var target_platforms = Properties.Settings.Default.Targets;
+            foreach (var target in target_platforms)
+            {
+                var target_info = ((string)(target)).Split(',');
+                if (target_info.Length != 3)
+                {
+                    Console.WriteLine("[Error] Invalid target definition: {0}", target);
+                    continue;
+                }
+
+                var target_type = target_info[0];
+                var target_name = target_info[1];
+                var target_ip = IPAddress.Parse("0.0.0.0");
+                try
+                {
+                    target_ip = IPAddress.Parse(target_info[2].Trim());
+                }
+                catch (System.FormatException e)
+                {
+                    target_ip = IPAddress.Parse("0.0.0.0");
+                }
+
+                string icon = "appbar_network";
+                icon = icon_dict.TryGetValue(target_type, out icon) ? icon_dict[target_type] : "appbar_network";
+                platforms.Add(new PlatformDescription() { Name = target_name, IP = target_ip, Icon = icon });
+            }
+            
             platforms.Add(new PlatformDescription() { Name = "Network", IP = IPAddress.Loopback, Icon = "appbar_network", Detailed = true });
-            platforms.Add(new PlatformDescription() { Name = "IPhone", IP = Platform.GetIPhoneAddress(), Icon = "appbar_network", Detailed = true });
-            platforms.Add(new PlatformDescription() { Name = "Linux", IP = Platform.GetLinuxAddress(), Icon = "appbar_network", Detailed = true });
 
             comboBox.ItemsSource = platforms;
 

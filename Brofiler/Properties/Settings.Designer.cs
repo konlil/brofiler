@@ -12,7 +12,7 @@ namespace Profiler.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -44,6 +44,23 @@ namespace Profiler.Properties {
             }
             set {
                 this["DefaultPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>iOS, My iPhone, 10.242.88.196</string>
+  <string>Android, Vivo R7, 10.242.18.151</string>
+  <string>Linux, Linux, 192.168.45.101</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Targets {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Targets"]));
+            }
+            set {
+                this["Targets"] = value;
             }
         }
     }
