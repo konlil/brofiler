@@ -32,14 +32,7 @@ namespace Profiler
         List<ThreadRow> rows = new List<ThreadRow>();
         Dictionary<int, ThreadRow> id2row = new Dictionary<int, ThreadRow>();
 
-        SolidColorBrush ThreadRowBackEven;
-        SolidColorBrush ThreadRowBackOdd;
-        SolidColorBrush ThreadRowLine;
-        SolidColorBrush LabelForeground;
-        SolidColorBrush HeaderBackground;
-        SolidColorBrush HeaderBorder;
-        SolidColorBrush HeaderText;
-
+        SolidColorBrush AlternativeBackground;
         SolidColorBrush FrameSelection;
         SolidColorBrush FrameHover;
         Color MeasureBackground;
@@ -47,14 +40,7 @@ namespace Profiler
 
         void InitColors()
         {
-            ThreadRowBackEven = FindResource("BroThreadViewRowEven") as SolidColorBrush;
-            ThreadRowBackOdd = FindResource("BroThreadViewRowOdd") as SolidColorBrush;
-            ThreadRowLine = FindResource("BroThreadViewRowLine") as SolidColorBrush;
-            LabelForeground = FindResource("BroThreadViewLableForeground") as SolidColorBrush;
-            HeaderBackground = FindResource("BroThreadViewHeaderBackground") as SolidColorBrush;
-            HeaderBorder = FindResource("BroThreadViewHeaderBorderColor") as SolidColorBrush;
-            HeaderText = FindResource("BroThreadViewHeaderTextColor") as SolidColorBrush;
-
+            AlternativeBackground = FindResource("BroAlternative") as SolidColorBrush;
             FrameSelection = FindResource("BroFrameSelection") as SolidColorBrush;
             FrameHover = FindResource("BroFrameHover") as SolidColorBrush;
             MeasureBackground = Color.FromArgb(100, 0, 0, 0);
@@ -92,7 +78,6 @@ namespace Profiler
 
 
         Mesh BackgroundMesh { get; set; }
-        Mesh GridMesh { get; set; }
 
         void InitThreadList(FrameGroup group)
         {
@@ -107,11 +92,12 @@ namespace Profiler
             
             rows.Add(new HeaderThreadRow(group)
             {
-                HotDuration = Profiler.Globals.HotDuration,
-                TextColor = HeaderText.Color,
-                BackgroundColor = HeaderBackground.Color,
-                HotColor = Colors.Red,
-                NormalColor = Colors.Green
+                //GradientTop = Colors.LightGray,
+                GradientTop = Colors.Green,
+                GradientBottom = Colors.Green,
+                //GradientBottom = Colors.Gray,
+                SplitLines = Colors.White,
+                TextColor = Colors.Black
             });
 
             for (int i = 0; i < Math.Min(group.Board.Threads.Count, group.Threads.Count); ++i)
@@ -151,12 +137,7 @@ namespace Profiler
             if (BackgroundMesh != null)
                 BackgroundMesh.Dispose();
 
-            if (GridMesh != null)
-                GridMesh.Dispose();
-
             DynamicMesh backgroundBuilder = surface.CreateMesh();
-            DynamicMesh backgroundLines = surface.CreateMesh();
-            backgroundLines.Geometry = DirectX.Mesh.GeometryType.Lines;
 
             double offset = 0.0;
 
@@ -169,56 +150,21 @@ namespace Profiler
 
                 Thickness margin = new Thickness(0, 0, 0, 0);
 
-                Label labelName = new Label() { Content = row.Name, Margin = margin, Padding = new Thickness(), Height = row.Height / RenderSettings.dpiScaleY, VerticalContentAlignment = VerticalAlignment.Center };
-                labelName.Foreground = LabelForeground;
-                labelName.BorderBrush = ThreadRowLine;
-                labelName.BorderThickness = new Thickness(0,1,1,1);
+                Label labelName = new Label() { Content = row.Name, Margin = margin, Padding = new Thickness(), FontWeight = FontWeights.Bold, Height = row.Height / RenderSettings.dpiScaleY, VerticalContentAlignment = VerticalAlignment.Center };
 
                 Grid.SetRow(labelName, threadIndex);
 
-                if (threadIndex == 0)
+                if (threadIndex % 2 == 1)
                 {
-                    labelName.Content = "Frame";
-                    labelName.Background = HeaderBackground;
-                    backgroundBuilder.AddRect(new Rect(0.0, offset / scroll.Height, 1.0, row.Height / scroll.Height), HeaderBackground.Color);
-                }
-                else
-                {
-                    if (threadIndex % 2 == 1)
-                    {
-                        labelName.Background = ThreadRowBackOdd;
-                        backgroundBuilder.AddRect(new Rect(0.0, offset / scroll.Height, 1.0, row.Height / scroll.Height), ThreadRowBackOdd.Color);
-                    }
-                    else
-                    {
-                        labelName.Background = ThreadRowBackEven;
-                        backgroundBuilder.AddRect(new Rect(0.0, offset / scroll.Height, 1.0, row.Height / scroll.Height), ThreadRowBackEven.Color);
-                    }
-                }
-
-                if (row.GetType() == typeof(EventsThreadRow))
-                {
-                    EventsThreadRow er = (EventsThreadRow)(row);
-                    int depth = er.MaxDepth;
-                    for (int i = 0; i < depth; i++)
-                    {
-                        double y = (er.Height * i / er.MaxDepth + offset) / scroll.Height;
-                        backgroundLines.AddLine(new Point(0.0, y), new Point(1.0, y), ThreadRowLine.Color);
-                    }
-                }
-                else if (row.GetType() == typeof(HeaderThreadRow))
-                {
-                    backgroundLines.AddLine(new Point(0.0, offset / scroll.Height), new Point(1.0, offset / scroll.Height), ThreadRowLine.Color);
+                    labelName.Background = AlternativeBackground;
+                    backgroundBuilder.AddRect(new Rect(0.0, offset / scroll.Height, 1.0, row.Height / scroll.Height), AlternativeBackground.Color);
                 }
 
                 ThreadList.Children.Add(labelName);
                 offset += row.Height;
             }
 
-            backgroundLines.AddLine(new Point(0.0, 0.0), new Point(0.0, 1.0), ThreadRowLine.Color);
-
             BackgroundMesh = backgroundBuilder.Freeze(surface.RenderDevice);
-            GridMesh = backgroundLines.Freeze(surface.RenderDevice);
         }
 
 		private void Row_EventNodeSelected(ThreadRow row, EventFrame frame, EventNode node, ITick tick)
@@ -543,7 +489,6 @@ namespace Profiler
 
             if (layer == DirectXCanvas.Layer.Foreground)
             {
-                canvas.Draw(GridMesh);
                 DrawSelection(canvas);
                 DrawHover(canvas);
                 DrawMeasure(canvas);

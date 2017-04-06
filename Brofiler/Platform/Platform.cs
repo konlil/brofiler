@@ -28,10 +28,5 @@ namespace Profiler
         {
             return IPAddress.Parse("10.242.88.196");
         }
-
-        public static IPAddress GetLinuxAddress()
-        {
-            return IPAddress.Parse("192.168.45.101");
-        }
     }
 }

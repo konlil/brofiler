@@ -13,9 +13,9 @@ namespace Profiler
 {
 	public static class RenderParams
 	{
-		private static double baseHeight = 24.0;
+		private static double baseHeight = 16.0;
         public static double BaseHeight { get { return baseHeight * DirectX.RenderSettings.dpiScaleX; } }
-		private static double baseMargin = 1;
+		private static double baseMargin = 0.75;
         public static double BaseMargin { get { return baseMargin * DirectX.RenderSettings.dpiScaleY; } }
 	}
 	
@@ -133,50 +133,33 @@ namespace Profiler
         public override double Height { get { return RenderParams.BaseHeight; } }
         public override string Name { get { return String.Empty; } }
 
-        //public Color GradientTop { get; set; }
-        //public Color GradientBottom { get; set; }
-        //public Color SplitLines { get; set; }
+        public Color GradientTop { get; set; }
+        public Color GradientBottom { get; set; }
+        public Color SplitLines { get; set; }
         public Color TextColor { get; set; }
-        public Color BackgroundColor { get; set; }
-        public Color HotColor { get; set; }
-        public Color NormalColor { get; set; }
-
-        public double HotDuration { get; set; }
-        
         public HeaderThreadRow(FrameGroup group)
         {
             Group = group;
         }
 
-        //DirectX.Mesh BackgroundMeshLines { get; set; }
+        DirectX.Mesh BackgroundMeshLines { get; set; }
         DirectX.Mesh BackgroundMeshTris { get; set; }
 
         public override void BuildMesh(DirectX.DirectXCanvas canvas, ThreadScroll scroll)
         {
-            DirectX.DynamicMesh builderHeader = canvas.CreateMesh();
-            //builderHeader.AddRect(new Rect(0.0, 0.0, 1.0, (Height - RenderParams.BaseMargin) / scroll.Height), BackgroundColor);
+            DirectX.DynamicMesh builder = canvas.CreateMesh();
+            builder.Geometry = DirectX.Mesh.GeometryType.Lines;
+
             foreach (EventFrame frame in Group.MainThread.Events)
             {
-                Interval iv = scroll.TimeToUnit(frame.Header);
-                Color color = frame.Header.Duration > HotDuration ? HotColor : NormalColor;
-                builderHeader.AddRect(new Rect(iv.Left, 0, iv.Width, (Height - RenderParams.BaseMargin) / scroll.Height), color);
+                double x = scroll.TimeToUnit(frame.Header).Left;
+                builder.AddLine(new Point(x, 0.0), new Point(x, 1.0), SplitLines);
             }
-            BackgroundMeshTris = builderHeader.Freeze(canvas.RenderDevice);
-            
-            //DirectX.DynamicMesh builder = canvas.CreateMesh();
-            //builder.Geometry = DirectX.Mesh.GeometryType.Lines;
-            //foreach (EventFrame frame in Group.MainThread.Events)
-            //{
-            //    double x = scroll.TimeToUnit(frame.Header).Left;
-            //    builder.AddLine(new Point(x, 0.0), new Point(x, (Height - RenderParams.BaseMargin) / scroll.Height), Colors.DarkGray);
-            //}
-            //BackgroundMeshLines = builder.Freeze(canvas.RenderDevice);
-            
-            //DirectX.DynamicMesh builder = canvas.CreateMesh();
-            //builder.Geometry = DirectX.Mesh.GeometryType.Lines;
-            //builder.AddLine(new Point(0.0, 0.0), new Point(1.0, 0.0), (Color)ColorConverter.ConvertFromString("#EEEEEE"));
-            //BackgroundMeshLines = builder.Freeze(canvas.RenderDevice);
+            BackgroundMeshLines = builder.Freeze(canvas.RenderDevice);
 
+            DirectX.DynamicMesh builderHeader = canvas.CreateMesh();
+			builderHeader.AddRect(new Rect(0.0, 0.0, 1.0, (Height - RenderParams.BaseMargin) / scroll.Height), new Color[] { GradientTop, GradientTop, GradientBottom, GradientBottom });
+            BackgroundMeshTris = builderHeader.Freeze(canvas.RenderDevice);
         }
 
         public override void Render(DirectXCanvas canvas, ThreadScroll scroll, DirectXCanvas.Layer layer, Rect box)
@@ -186,11 +169,11 @@ namespace Profiler
                 SharpDX.Matrix world = SharpDX.Matrix.Scaling((float)scroll.Zoom, 1.0f, 1.0f);
                 world.TranslationVector = new SharpDX.Vector3(-(float)(scroll.ViewUnit.Left * scroll.Zoom), 0.0f, 0.0f);
 
-                //BackgroundMeshLines.World = world;
+                BackgroundMeshLines.World = world;
                 BackgroundMeshTris.World = world;
 
-                //canvas.Draw(BackgroundMeshLines);
                 canvas.Draw(BackgroundMeshTris);
+                canvas.Draw(BackgroundMeshLines);
 
                 Data.Utils.ForEachInsideInterval(Group.MainThread.Events, scroll.ViewTime, frame =>
                 {
