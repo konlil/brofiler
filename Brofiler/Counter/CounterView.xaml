@@ -14,25 +14,36 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label>First Plot: </Label>
-            <!--DisplayMemberPath="name" SelectedValuePath="id"--> 
-            <ComboBox x:Name="Combo1" SelectionChanged="Combo1_SelectionChanged" Width="100"></ComboBox>
-            <Label>Second Plot: </Label>
-            <ComboBox x:Name="Combo2" SelectionChanged="Combo2_SelectionChanged" Width="100"></ComboBox>
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <StackPanel Orientation="Vertical">
-                <d3:ChartPlotter x:Name="plotter" LegendVisible="False" BorderThickness="1" BorderBrush="Black"  Margin="10">
-                    <!--<d3:Header x:Name="HeaderName" Content="Simple Chart"/>-->
-                    <!--<d3:HorizontalAxisTitle x:Name="HorizontalAxisTitle" Visibility="Collapsed">This is horizontal axis</d3:HorizontalAxisTitle>-->
-                    <d3:VerticalAxisTitle x:Name="VerticalAxisTitle">This is vertical axis</d3:VerticalAxisTitle>
-                </d3:ChartPlotter>
-                    
-                <d3:ChartPlotter x:Name="plotter2" LegendVisible="False" BorderThickness="1" BorderBrush="Black"  Margin="10">
-                    <!--<d3:Header x:Name="HeaderName2" Content="Simple Chart"/>-->
-                    <!--<d3:HorizontalAxisTitle x:Name="HorizontalAxisTitle2" Visibility="Collapsed">This is horizontal axis</d3:HorizontalAxisTitle>-->
-                    <d3:VerticalAxisTitle x:Name="VerticalAxisTitle2">This is vertical axis</d3:VerticalAxisTitle>
-                </d3:ChartPlotter>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ToggleButton x:Name="ShowCursor1" ToolTip="Show Cursor" Width="20" Height="20" Margin="0,0,3,0" Padding="-5" Click="ShowCursor1_Click">
+                            <ContentControl Style="{StaticResource appbar_draw_marker}" />
+                        </ToggleButton>
+                        <ComboBox x:Name="Combo1" Margin="0,0,10,0" SelectionChanged="Combo1_SelectionChanged" Width="100"></ComboBox>
+                    </StackPanel>
+                    <d3:ChartPlotter x:Name="plotter1" LegendVisible="False" BorderThickness="1" BorderBrush="Black"  Margin="10,1,10,3">
+                        <!--<d3:Header x:Name="HeaderName" Content="Simple Chart"/>-->
+                        <!--<d3:HorizontalAxisTitle x:Name="HorizontalAxisTitle" Visibility="Collapsed">This is horizontal axis</d3:HorizontalAxisTitle>-->
+                        <d3:VerticalAxisTitle x:Name="VerticalAxisTitle1">Vertical axis</d3:VerticalAxisTitle>
+                    </d3:ChartPlotter>
+                </StackPanel>
+                   
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ToggleButton x:Name="ShowCursor2" ToolTip="Show Cursor" Width="20" Height="20" Margin="0,0,3,0" Padding="-5" Click="ShowCursor2_Click">
+                            <ContentControl Style="{StaticResource appbar_draw_marker}" />
+                        </ToggleButton>
+                        <ComboBox x:Name="Combo2" Margin="0,0,10,0" SelectionChanged="Combo2_SelectionChanged" Width="100"></ComboBox>
+                    </StackPanel>
+                    <d3:ChartPlotter x:Name="plotter2" LegendVisible="False" BorderThickness="1" BorderBrush="Black"  Margin="10,1,10,3">
+                        <!--<d3:Header x:Name="HeaderName2" Content="Simple Chart"/>-->
+                        <!--<d3:HorizontalAxisTitle x:Name="HorizontalAxisTitle2" Visibility="Collapsed">This is horizontal axis</d3:HorizontalAxisTitle>-->
+                        <d3:VerticalAxisTitle x:Name="VerticalAxisTitle2">Vertical axis</d3:VerticalAxisTitle>
+                    </d3:ChartPlotter>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
         

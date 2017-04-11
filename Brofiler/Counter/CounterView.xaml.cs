@@ -16,6 +16,7 @@ using Profiler.Data;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.Filters;
+using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -30,6 +31,9 @@ namespace Profiler
         private CounterCollection counters = new CounterCollection();
         private EnumerableDataSource<CounterPoint> dataSource1 = null;
         private EnumerableDataSource<CounterPoint> dataSource2 = null;
+
+        private LineGraph line1 = null;
+        private LineGraph line2 = null;
 
         public CounterView()
         {
@@ -70,13 +74,16 @@ namespace Profiler
             dataSource1 = new EnumerableDataSource<CounterPoint>(counters.GetCounterArray(id));
             dataSource1.SetXMapping(x => x.Id);
             dataSource1.SetYMapping(y => y.Count);
+            if (line1 == null)
+                line1 = plotter1.AddLineGraph(dataSource1, Colors.Green, 2, item.name);
+            else
+                line1.DataSource = dataSource1;
+            line1.Filters.Add(new InclinationFilter());
+            line1.Filters.Add(new FrequencyFilter());
 
-            plotter.Children.RemoveAll(typeof(LineGraph));
-            var lineGraph = plotter.AddLineGraph(dataSource1, Colors.Green, 2, item.name);
-            lineGraph.Filters.Add(new InclinationFilter());
-            lineGraph.Filters.Add(new FrequencyFilter());
-            plotter.FitToView();
-            VerticalAxisTitle.Content = item.name;
+            plotter1.LegendVisible = false;
+            plotter1.FitToView();
+            VerticalAxisTitle1.Content = item.name;
         }
 
         private void Combo2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -88,13 +95,35 @@ namespace Profiler
             dataSource2 = new EnumerableDataSource<CounterPoint>(counters.GetCounterArray(id));
             dataSource2.SetXMapping(x => x.Id);
             dataSource2.SetYMapping(y => y.Count);
+            if (line2 == null)
+                line2 = plotter2.AddLineGraph(dataSource2, Colors.Red, 2, item.name);
+            else
+                line2.DataSource = dataSource2;
 
-            plotter2.Children.RemoveAll(typeof(LineGraph));
-            var lineGraph = plotter2.AddLineGraph(dataSource2, Colors.Red, 2, item.name);
-            lineGraph.Filters.Add(new InclinationFilter());
-            lineGraph.Filters.Add(new FrequencyFilter());
+            line2.Filters.Add(new InclinationFilter());
+            line2.Filters.Add(new FrequencyFilter());
+
+            plotter2.LegendVisible = false;
             plotter2.FitToView();
             VerticalAxisTitle2.Content = item.name;
+        }
+
+        private void ShowCursor1_Click(object sender, RoutedEventArgs e)
+        {
+            bool clicked = ShowCursor1.IsChecked ?? false;
+            if (clicked)
+                plotter1.Children.Add(new CursorCoordinateGraph());
+            else
+                plotter1.Children.RemoveAll(typeof(CursorCoordinateGraph));
+        }
+
+        private void ShowCursor2_Click(object sender, RoutedEventArgs e)
+        {
+            bool clicked = ShowCursor1.IsChecked ?? false;
+            if (clicked)
+                plotter2.Children.Add(new CursorCoordinateGraph());
+            else
+                plotter2.Children.RemoveAll(typeof(CursorCoordinateGraph));
         }
     }
 }
