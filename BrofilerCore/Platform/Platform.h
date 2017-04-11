@@ -1,6 +1,5 @@
 #pragma once
 
-
 //Include Headers
 #include "Platform/Common.h"
 #include "Platform/Memory.h"
@@ -19,7 +18,7 @@
 #include "Platform/Posix_Time.h"
 #include "Platform/Posix_Memory.h"
 #include "Platform/Posix_Tls.h"
-#elif defined(BF_PLATFORM_LINUX)
+#elif defined( BF_PLATFORM_LINUX )
 #include "Platform/Posix_Time.h"
 #include "Platform/Posix_Memory.h"
 #include "Platform/Posix_Tls.h"

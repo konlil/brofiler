@@ -5,7 +5,7 @@
 #include <unistd.h>
 #if defined(BF_PLATFORM_ANDROID)
 #include <time.h>
-#if defined(BF_PLATFORM_LINUX)
+#elif defined(BF_PLATFORM_LINUX)
 #include <time.h>
 #endif
 #include <sys/time.h>

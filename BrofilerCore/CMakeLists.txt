@@ -99,6 +99,7 @@ elseif (${PLATFORM} STREQUAL ${PLATFORM_IOS})
     add_definitions(-DBF_PLATFORM_IOS=1)
 elseif (${PLATFORM} STREQUAL ${PLATFORM_ANDROID})
     add_definitions(-DBF_PLATFORM_ANDROID=1)
+elseif (${PLATFORM} STREQUAL ${PLATFORM_LINUX})
 endif()
 
 # 生成链接库
