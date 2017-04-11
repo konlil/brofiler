@@ -33,6 +33,10 @@ elseif(WIN32)
 elseif(APPLE)
 	message(STATUS "mac...")
 	set(PLATFORM "mac")
+
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	message(STATUS "linux...")
+	add_definitions("-DLINUX=1")
 endif()
 
 # 添加子目录
@@ -43,4 +47,6 @@ if(WIN32)
 	add_subdirectory(BrofilerWindowsTest)
 elseif(IOS)
 	add_subdirectory(BrofilerIOSTest)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	add_subdirectory(BrofilerLinuxTest)
 endif()
