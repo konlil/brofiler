@@ -11,6 +11,8 @@ namespace Test
 		static const size_t WORKER_THREAD_COUNT = 2;
 		std::array<std::thread*, WORKER_THREAD_COUNT> workers;
 		bool isAlive;
+		double v_x;
+		double v_y;
 
 		void UpdateInput();
 		void UpdateMessages();

@@ -6,6 +6,10 @@
 #include <vector>
 #include <cstdlib>
 
+#ifdef BF_PLATFORM_WINDOWS
+#pragma comment(lib, "winmm.lib")
+#endif
+
 namespace Test
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,8 +58,17 @@ void SlowFunction2()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Engine::Frame()
 {
+#ifdef BF_PLATFORM_WINDOWS
+	DWORD t0 = timeGetTime();
+#endif
+
 	Update();
 	Render();
+
+#ifdef BF_PLATFORM_WINDOWS
+	DWORD t = timeGetTime() - t0;
+	BROFILER_COUNTER_SET(FrameTime, (double)(t));
+#endif
 
 	return true;
 }
@@ -75,6 +88,13 @@ void Engine::Update()
 	UpdateScene();
 
 	//UpdatePhysics();
+
+#ifdef BF_PLATFORM_WINDOWS
+	v_x += 1;
+	v_y = sin(v_x);
+	BROFILER_COUNTER_SET(SIN, v_y);
+#endif
+
 }
 
 void Engine::Render()
@@ -131,6 +151,10 @@ void Engine::UpdatePhysics()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Engine::Engine() : isAlive(true)
 {
+#ifdef BF_PLATFORM_WINDOWS
+	timeBeginPeriod(1);
+#endif
+
 	for (size_t i = 0; i < WORKER_THREAD_COUNT; ++i)
 	{
 		workers[i] = new std::thread(std::bind(&WorkerThread, this));
