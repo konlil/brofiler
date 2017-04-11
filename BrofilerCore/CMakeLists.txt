@@ -55,7 +55,10 @@ set(Core
 		Event.h
 		Event.cpp
 		EventDescriptionBoard.cpp
-		EventDescriptionBoard.h)
+		EventDescriptionBoard.h
+		Counter.h
+		Counter.cpp
+	)
 
 set(Network
 		Message.cpp
