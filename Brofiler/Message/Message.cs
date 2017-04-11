@@ -42,7 +42,7 @@ namespace Profiler
             SymbolPack = 7,
             CallstackPack = 8,
 			SyscallPack = 9,
-			FiberSynchronization = 10,
+            ReportCounters = 10,
         }
 
         public Type ResponseType { get; set; }

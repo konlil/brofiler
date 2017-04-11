@@ -55,6 +55,11 @@ namespace Profiler
             }
         }
 
+        public void HandleCounterMessage(DataResponse response)
+        {
+            CounterView.ApplyResponse(response);
+        }
+
         private void ClearAllTabs()
         {
             frameTabs.Items.Clear();

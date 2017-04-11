@@ -247,6 +247,13 @@ namespace Profiler
                         StatusText.Text = new String(response.Reader.ReadChars(length));
                         break;
 
+                    case DataResponse.Type.ReportCounters:
+                        {
+                            MainWindow w = (MainWindow)(Window.GetWindow(this));
+                            w.HandleCounterMessage(response);
+                        }
+                        break;
+
                     case DataResponse.Type.NullFrame:
 						StatusText.Visibility = System.Windows.Visibility.Collapsed;
                         lock (frames)

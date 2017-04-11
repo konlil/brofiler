@@ -13,19 +13,25 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="25"/>
+            <RowDefinition Height="5"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <!--<c:WindowHeader Title="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=Title}" Icon="icon.ico" />-->
-        <Border Grid.Row="1">
+        <Border Grid.Row="0" >
             <local:TimeLine Margin="2" x:Name="timeLine" />
         </Border>
-        <Expander Header="Threads (block info = Ctrl + LMB)" Margin="1" Grid.Row="2" VerticalContentAlignment="Stretch" UseLayoutRounding="False" IsExpanded="True">
+        <Expander Header="Counters" Margin="1" Grid.Row="1" VerticalAlignment="Stretch" Width="Auto">
+            <local:CounterView x:Name="CounterView" Height="Auto" MinHeight="1" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Width="Auto" />
+        </Expander>
+        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Rows" />
+        <Expander Visibility="Visible" Header="Threads (block info = Ctrl + LMB)" Margin="1" Grid.Row="3" VerticalContentAlignment="Stretch" UseLayoutRounding="False" IsExpanded="True">
             <Grid>
                 <local:ThreadView x:Name="ThreadView" Height="Auto" MinHeight="1" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Width="Auto" />
             </Grid>
         </Expander>
-        <TabControl Margin="0" Grid.Row="3" Name="frameTabs" />
+        <TabControl Margin="0" Grid.Row="4" Name="frameTabs" VerticalAlignment="Stretch"/>
     </Grid>
 </Window>

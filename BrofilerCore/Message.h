@@ -21,6 +21,7 @@ struct DataResponse
 		SymbolPack = 7,						// A pack full of resolved Symbols
 		CallstackPack = 8,					// Callstack Pack
 		SyscallPack = 9,					// SysCalls Pack
+		ReportCounters = 10,				// Report Counters
 	};
 
 	uint32_t version;

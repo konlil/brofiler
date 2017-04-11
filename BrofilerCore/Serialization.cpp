@@ -49,12 +49,18 @@ namespace Brofiler
 		return stream;
 	}
 
+	OutputDataStream &operator << (OutputDataStream &stream, double val)
+	{
+		stream.write((char*)&val, sizeof(val));
+		return stream;
+	}
+	
 	OutputDataStream &operator << ( OutputDataStream &stream, unsigned char val )
 	{
 		stream.write( (char*)&val, sizeof(unsigned char) );
 		return stream;
 	}
-	
+
 	OutputDataStream & operator<<(OutputDataStream &stream, uint64_t val)
 	{
 		stream.write( (char*)&val, sizeof(uint64_t) );

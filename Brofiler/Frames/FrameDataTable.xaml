@@ -9,7 +9,7 @@
 	mc:Ignorable="d"
 	x:Class="Profiler.FrameDataTable"
 	x:Name="UserControl" d:DesignHeight="480"
-	d:DataContext="{Binding Source={x:Static Profiler_Data:TestEventFrame.Board}}" Width="803.57">
+	Width="803.57">
 
   <UserControl.Resources>
     <CollectionViewSource x:Key="BoardViewResource" Source="{Binding}">

@@ -1,6 +1,7 @@
 #include "Core.h"
 #include "Common.h"
 #include "Event.h"
+#include "Counter.h"
 #include "ProfilerServer.h"
 #include "EventDescriptionBoard.h"
 #include "Thread.h"
@@ -170,7 +171,7 @@ void Core::CleanupThreads()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Core::Core() : progressReportedLastTimestampMS(0), isActive(false), capture_mask(0xFFFFFFFF)
+Core::Core() : progressReportedLastTimestampMS(0), isActive(false), capture_mask(0xFFFFFFFF), frame_id(0)
 {
 }
 
@@ -192,6 +193,8 @@ void Core::Update()
 			Platform::Log("[Brofiler]Frame time: %f ms\n", (time.finish - time.start) / 1000.0);
 		}
 
+		DumpCounters();
+
 		if (IsTimeToReportProgress())
 			DumpCapturingProgress();		
 	}
@@ -203,6 +206,8 @@ void Core::Update()
 		frames.push_back(EventTime());
 		frames.back().Start();
 	}
+
+	frame_id++;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::UpdateEvents()
@@ -220,11 +225,24 @@ void Core::Activate( bool active )
 	{
 		isActive = active;
 
+		Brofiler::CounterMgr::Get().ResetNewCounterIdx();
+
 		for(auto it = threads.begin(); it != threads.end(); ++it)
 		{
 			ThreadEntry* entry = *it;
 			entry->Activate(active);
 		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Core::DumpCounters()
+{
+	static int64_t counterReportedLastTimestampMS = 0;
+	int64_t now = Platform::TimeMilliSeconds();
+	if ( now > counterReportedLastTimestampMS + 500)
+	{
+		Brofiler::CounterMgr::Get().Dump(frame_id);
+		counterReportedLastTimestampMS = now;
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -127,6 +127,9 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="DynamicDataDisplay">
+      <HintPath>D3\DynamicDataDisplay.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>AutoEmbedLibs\ICSharpCode.AvalonEdit.dll</HintPath>
@@ -180,7 +183,14 @@
     <Compile Include="Controls\PlatformSelector.xaml.cs">
       <DependentUpon>PlatformSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Counter\CounterPlot.xaml.cs">
+      <DependentUpon>CounterPlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Counter\CounterView.xaml.cs">
+      <DependentUpon>CounterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\Callstack.cs" />
+    <Compile Include="Data\Counter.cs" />
     <Compile Include="Data\Durationable.cs" />
     <Compile Include="Data\EventBoard.cs" />
     <Compile Include="Data\EventData.cs" />
@@ -237,6 +247,14 @@
       <DependentUpon>TimeLineItem.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\PlatformSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Counter\CounterPlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Counter\CounterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

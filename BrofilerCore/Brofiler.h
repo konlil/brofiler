@@ -309,6 +309,14 @@ struct ThreadScope
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct BROFILER_API CounterAPI
+{
+	static uint8_t GetCounterIndex(const char* name);
+	static void SetCounter(uint8_t idx, double v);
+	static void IncCounter(uint8_t idx, double v);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 #define BRO_UNUSED(x) (void)(x)
@@ -429,7 +437,17 @@ struct ThreadScope
 #define BROFILER_CATEGORY5(NAME, COLOR)
 #endif
 
-// Runtime markup-level
+// Perf counter
+#define BROFILER_COUNTER_SET(name, v) static uint8_t s_perfcounter_##name_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
+									Brofiler::CounterAPI::SetCounter(s_perfcounter_##name_idx, v);
+
+#define BROFILER_COUNTER_INC(name, v)   static uint8_t s_perfcounter_##name_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
+									Brofiler::CounterAPI::IncCounter(s_perfcounter_##name_idx, v);
+
+#define BROFILER_COUNTER_DEC(name, v)  BROFILER_COUNTER_INC(name, -v)
+
+#define BROFILER_COUNTER_RESET(name)  BROFILER_COUNTER_SET(name, 0)
+
 																				
 #else
 #define BROFILER_EVENT(NAME)

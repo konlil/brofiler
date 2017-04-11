@@ -147,6 +147,7 @@ class Core
 	std::vector<EventTime> frames;
 
 	uint32_t capture_mask;
+	uint64_t frame_id;
 
 	//CallstackCollector callstackCollector;
 	//SysCallCollector syscallCollector;
@@ -159,6 +160,7 @@ class Core
 
 	friend struct Singleton<Core>;
 
+	void DumpCounters();
 	void DumpCapturingProgress();
 	void SendHandshakeResponse(CaptureStatus::Type status);
 
