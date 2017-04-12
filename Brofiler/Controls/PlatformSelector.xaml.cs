@@ -110,7 +110,7 @@ namespace Profiler
                 {
                     target_ip = IPAddress.Parse(target_info[2].Trim());
                 }
-                catch (System.FormatException e)
+                catch (System.FormatException)
                 {
                     target_ip = IPAddress.Parse("0.0.0.0");
                 }

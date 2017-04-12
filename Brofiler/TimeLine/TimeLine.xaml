@@ -130,10 +130,6 @@
             </Button>
             <TextBox x:Name="MaskText" Width="80" MouseDoubleClick="MaskText_DoubleClick" TextChanged="MaskText_TextChanged" ToolTip="Global capture mask" Text="0xFFFFFFFF" VerticalContentAlignment="Center" />
             <local:PlatformSelector x:Name="PlatformCombo" Margin="4,0,0,0" VerticalAlignment="Center" />
-            <StackPanel x:Name="warningBlock"  Orientation="Horizontal">
-                <Image x:Name="warningIcon" Source="Icons/Warning-icon.png" Margin="5,0,0,0" Width="24" Height="24" />
-                <TextBlock VerticalAlignment="Center" TextTrimming="WordEllipsis" Width="Auto"><Hyperlink x:Name="warningUrl" RequestNavigate="Hyperlink_RequestNavigate"><Run x:Name="warningText" Text="ClickMe"/></Hyperlink></TextBlock>
-            </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="PrevFrame" Click="PrevFrame_Click" Content="Prev" Margin="1,0,0,0" Width="40"></Button>
