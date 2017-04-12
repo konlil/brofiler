@@ -128,6 +128,13 @@ namespace Profiler
         }
     }
 
+    public enum CaptureType
+    {
+        Full,
+        Events,
+        Counters,
+    }
+
     public enum MessageType
     {
         Start,
@@ -149,8 +156,12 @@ namespace Profiler
 
     class StartMessage : Message
     {
-        public StartMessage()
+        private int capture_type;
+        private UInt32 capture_mask;
+        public StartMessage(int type, UInt32 mask)
         {
+            this.capture_mask = mask;
+            this.capture_type = type;
         }
 
         public override Int32 GetMessageType()
@@ -161,6 +172,8 @@ namespace Profiler
         public override void Write(BinaryWriter writer)
         {
             base.Write(writer);
+            writer.Write(capture_type);
+            writer.Write(capture_mask);
         }
     }
 

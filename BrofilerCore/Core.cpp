@@ -171,7 +171,7 @@ void Core::CleanupThreads()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Core::Core() : progressReportedLastTimestampMS(0), isActive(false), capture_mask(0xFFFFFFFF), frame_id(0)
+Core::Core() : progressReportedLastTimestampMS(0), isActive(false), isCounterActive(false), capture_mask(0xFFFFFFFF), frame_id(0)
 {
 }
 
@@ -183,6 +183,11 @@ void Core::Init()
 void Core::Update()
 {
 	Platform::ScopedGuard guard(lock);
+
+	if (isCounterActive)
+	{
+		DumpCounters();
+	}
 	
 	if (isActive)
 	{
@@ -192,12 +197,10 @@ void Core::Update()
 			//EventTime& time = frames.back();
 			//Platform::Log("[Brofiler]Frame time: %f ms\n", (time.finish - time.start) / 1000.0);
 		}
-
-		DumpCounters();
-
-		if (IsTimeToReportProgress())
-			DumpCapturingProgress();		
 	}
+	
+	if (IsTimeToReportProgress())
+		DumpCapturingProgress();		
 
 	UpdateEvents();
 
@@ -225,14 +228,24 @@ void Core::Activate( bool active )
 	{
 		isActive = active;
 
-		Brofiler::CounterMgr::Get().ResetNewCounterIdx();
-
 		for(auto it = threads.begin(); it != threads.end(); ++it)
 		{
 			ThreadEntry* entry = *it;
 			entry->Activate(active);
 		}
 	}
+}
+
+void Core::ActivateCounters(bool active)
+{
+	if (isCounterActive != active)
+	{
+		isCounterActive = active;
+		Brofiler::CounterMgr::Get().ResetNewCounterIdx();
+	}
+
+	if (active)
+		frame_id_started = frame_id;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Core::DumpCounters()
@@ -251,7 +264,13 @@ void Core::DumpCapturingProgress()
 	std::stringstream stream;
 
 	if (isActive)
+	{
 		stream << "Capturing Frame " << (uint32_t)frames.size() << std::endl;
+	}
+	else if (isCounterActive)
+	{
+		stream << "Capturing Frame " << (uint32_t)(frame_id - frame_id_started) << std::endl;
+	}
 
 	DumpProgress(stream.str().c_str());
 }
@@ -393,6 +412,10 @@ BROFILER_API void NextFrame()
 BROFILER_API bool IsActive()
 {
 	return Core::Get().isActive;
+}
+BROFILER_API bool IsCounterActive()
+{
+	return Core::Get().isCounterActive;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool RegisterThread(const char* name)

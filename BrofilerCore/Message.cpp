@@ -106,12 +106,17 @@ IMessage* IMessage::Create(InputDataStream& str)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void StartMessage::Apply()
 {
-	Core::Get().Activate(true);
+	Core::Get().Activate(capture_type == 0 || capture_type == 1);
+	Core::Get().ActivateCounters(capture_type == 0 || capture_type == 2);
+	EventDescription::SetGlobalCaptureMask(capture_mask);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IMessage* StartMessage::Create(InputDataStream&)
+IMessage* StartMessage::Create(InputDataStream& stream)
 {
-	return new StartMessage();
+	StartMessage* msg = new StartMessage();
+	stream >> msg->capture_type;
+	stream >> msg->capture_mask;
+	return msg;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +124,7 @@ void StopMessage::Apply()
 {
 	Core& core = Core::Get();
 	core.Activate(false);
+	core.ActivateCounters(false);
 	core.DumpFrames();
 	Server::Get().Send(DataResponse::NullFrame, OutputDataStream::Empty);
 }

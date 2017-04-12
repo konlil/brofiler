@@ -62,9 +62,6 @@ namespace Profiler
 
             this.Loaded += new RoutedEventHandler(TimeLine_Loaded);
 
-            StartButtonMainCommand = new RoutedCommand();
-            CommandBindings.Add(new CommandBinding(StartButtonMainCommand, StartButtonMainExecuted));
-
             System.Net.IPAddress defaultIP;
             System.Net.IPAddress.TryParse(Properties.Settings.Default.DefaultIP, out defaultIP);
             ProfilerClient.Get().IpAddress = defaultIP;
@@ -77,93 +74,8 @@ namespace Profiler
 
         Version CurrentVersion { get { return Assembly.GetExecutingAssembly().GetName().Version; } }
 
-        //String GetUniqueID()
-        //{
-        //    NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-        //    return nics.Length > 0 ? nics[0].GetPhysicalAddress().ToString() : new Random().Next().ToString();
-        //}
-
-        //void SendReportToGoogleAnalytics()
-        //{
-        //    var postData = new Dictionary<string, string>
-        //    {
-        //        { "v", "1" },
-        //        { "tid", "UA-58006599-1" },
-        //        { "cid", GetUniqueID() },
-        //        { "t", "pageview" },
-        //        { "dh", "brofiler.com" },
-        //        { "dp", "/app.html" },
-        //        { "dt", CurrentVersion.ToString() }
-        //    };
-
-        //    StringBuilder text = new StringBuilder();
-
-        //    foreach (var pair in postData)
-        //    {
-        //        if (text.Length != 0)
-        //            text.Append("&");
-
-        //        text.Append(String.Format("{0}={1}", pair.Key, HttpUtility.UrlEncode(pair.Value)));
-        //    }
-
-        //    using (WebClient client = new WebClient())
-        //    {
-        //        client.UploadStringAsync(new Uri("http://www.google-analytics.com/collect"), "POST", text.ToString());
-        //    }
-        //}
-
         void TimeLine_Loaded(object sender, RoutedEventArgs e)
         {
-            //checkVersion = new WebClient();
-
-            //checkVersion.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-            //checkVersion.DownloadStringCompleted += new DownloadStringCompletedEventHandler(OnVersionDownloaded);
-
-            //try
-            //{
-            //    checkVersion.DownloadStringAsync(new Uri("http://brofiler.com/update"));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.Print(ex.Message);
-            //}
-
-        }
-
-        void OnVersionDownloaded(object sender, DownloadStringCompletedEventArgs e)
-        {
-            //if (e.Cancelled || e.Error != null || String.IsNullOrEmpty(e.Result))
-            //    return;
-
-            //try
-            //{
-            //    SendReportToGoogleAnalytics();
-
-            //    XmlDocument doc = new XmlDocument();
-            //    doc.LoadXml(e.Result);
-
-            //    XmlElement versionNode = doc.SelectSingleNode("//div[@id='version']") as XmlElement;
-
-            //    if (versionNode != null)
-            //    {
-            //        Version version = Version.Parse(versionNode.InnerText);
-
-            //        if (version != CurrentVersion)
-            //        {
-            //            XmlElement messageNode = doc.SelectSingleNode("//div[@id='message']") as XmlElement;
-            //            String message = messageNode != null ? messageNode.InnerText : String.Empty;
-
-            //            XmlElement urlNode = doc.SelectSingleNode("//div[@id='url']") as XmlElement;
-            //            String url = urlNode != null ? urlNode.InnerText : String.Empty;
-
-            //            ShowWarning(message, url);
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.Print(ex.Message);
-            //}
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -540,25 +452,19 @@ namespace Profiler
             //ProfilerClient.Get().SendMessage(new SetupHookMessage(0, false));
         }
 
-        public void StartButtonMainExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            System.Windows.MessageBox.Show("hello from UserControl1");
-        }
-
-        private void OnStartMenuItemClick(object sender, RoutedEventArgs e)
-        {
-            var mi = e.OriginalSource as MenuItem;
-            if (mi == null) return;
-
-            var xmlAtt = mi.Tag as XmlAttribute;
-            if (xmlAtt != null) MessageBox.Show(xmlAtt.Value);
-        }
-
         private void StopButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ProfilerClient.Get().SendMessage(new StopMessage());
             StartButton.IsEnabled = true;
             StopButton.IsEnabled = false;
+        }
+
+        private UInt32 GetCurrentCaptureMask()
+        {
+            UInt32 mask = 0;
+            if (ConvertText2Hex(MaskText.Text, out mask))
+                return mask;
+            return 0;
         }
 
         private void StartButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -575,7 +481,10 @@ namespace Profiler
             ProfilerClient.Get().IpAddress = platform.IP;
             ProfilerClient.Get().Port = platform.Port;
 
-            StartMessage message = new StartMessage();
+            int capture_type = StartComboBox.SelectedIndex;
+            UInt32 capture_mask = GetCurrentCaptureMask();
+
+            StartMessage message = new StartMessage(capture_type, capture_mask);
             if (ProfilerClient.Get().SendMessage(message))
             {
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>

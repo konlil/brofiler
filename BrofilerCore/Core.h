@@ -147,6 +147,8 @@ class Core
 	std::vector<EventTime> frames;
 
 	uint32_t capture_mask;
+
+	uint64_t frame_id_started;
 	uint64_t frame_id;
 
 	//CallstackCollector callstackCollector;
@@ -174,6 +176,9 @@ public:
 
 	void Activate(bool active);
 	bool isActive;
+
+	void ActivateCounters(bool active);
+	bool isCounterActive;
 
 	const THREADID GetMainThreadID() { return mainThreadID; }
 

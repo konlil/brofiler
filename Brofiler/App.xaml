@@ -10,7 +10,6 @@
                 <ResourceDictionary Source="themes\Controls.xaml" />
                 <ResourceDictionary Source="themes\Icons.xaml" />
                 <ResourceDictionary Source="themes\Window.xaml" />
-                <ResourceDictionary Source="themes\SplitButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

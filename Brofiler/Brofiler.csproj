@@ -171,10 +171,6 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="Wpf.SplitButton, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Wpf.SplitButton.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -188,7 +184,6 @@
     <Compile Include="Controls\PlatformSelector.xaml.cs">
       <DependentUpon>PlatformSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SplitButton.cs" />
     <Compile Include="Counter\CounterPlot.xaml.cs">
       <DependentUpon>CounterPlot.xaml</DependentUpon>
     </Compile>
@@ -318,10 +313,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <Page Include="themes\SplitButtonStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="themes\Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -462,9 +453,6 @@
     <EmbeddedResource Include="DirectX\Fonts\SegoeUI_28_Normal_0.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icon\Email.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icon\Fax.ico" />
+    <Folder Include="Icon\" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,6 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
 	xmlns:local="clr-namespace:Profiler"
-    xmlns:ctrl="clr-namespace:Profiler.Controls"
 	xmlns:Profiler_Data="clr-namespace:Profiler.Data"
 	xmlns:System="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d"
@@ -76,15 +75,6 @@
                 <EasingPointKeyFrame KeyTime="0:0:1" Value="0,0"/>
             </PointAnimationUsingKeyFrames>
         </Storyboard>
-        <XmlDataProvider x:Key="xmlData_StartButton">
-            <x:XData>
-                <commands xmlns="">
-                    <cmd Description="Start full capture" Icon="pack://application:,,,/Brofiler;component/Icon/Email.ico" ReturnData="Email"/>
-                    <cmd Description="Start without events" Icon="pack://application:,,,/Brofiler;component/Icon/Fax.ico" ReturnData="Fax"/>
-                    <cmd Description="Start without events" Icon="pack://application:,,,/Brofiler;component/Icon/Fax.ico" ReturnData="Fax"/>
-                </commands>
-            </x:XData>
-        </XmlDataProvider>
     </UserControl.Resources>
     <UserControl.Triggers>
         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -114,26 +104,14 @@
             </ListView.ItemContainerStyle>
         </ListView>
         <StackPanel Orientation="Horizontal" Margin="0" Grid.ColumnSpan="2" HorizontalAlignment="Left">
-            <ctrl:SplitButton DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                              Style="{StaticResource ToolBarSplitButtonStyle}" Image="pack://Application:,,,/Icon/Fax.ico" 
-                              MainButtonCommand="{Binding StartButtonMainCommand}"
-                              Text="Start Capturing" IsEnabled="True">
-                <ctrl:SplitButton.DropDownContextMenu>
-                    <ContextMenu ItemsSource="{Binding Source={StaticResource xmlData_StartButton}, XPath=commands/cmd}" MenuItem.Click="OnStartMenuItemClick">
-                        <ContextMenu.ItemContainerStyle>
-                            <Style>
-                                <Setter Property="MenuItem.Template" Value="{StaticResource SplitMenuItemTemplate}"/>
-                                <Setter Property="MenuItem.Header" Value="{Binding XPath=@Description}"/>
-                                <Setter Property="MenuItem.Icon" Value="{Binding XPath=@Icon}"/>
-                                <Setter Property="MenuItem.Tag" Value="{Binding XPath=@ReturnData}"/>
-                            </Style>
-                        </ContextMenu.ItemContainerStyle>
-                    </ContextMenu>
-                </ctrl:SplitButton.DropDownContextMenu>
-            </ctrl:SplitButton>
             <Button x:Name="StartButton"  Width="24" Height="24" Click="StartButton_Click" ToolTip="Start Profiling Session" Margin="1,0,0,0" Padding="-6">
                 <ContentControl Style="{StaticResource appbar_control_play}" Cursor="Hand" />
             </Button>
+            <ComboBox x:Name="StartComboBox" Width="100" Height="24" Margin="1,0,0,0">
+                <ComboBoxItem Tag="0" IsSelected="True">Full Capture</ComboBoxItem>
+                <ComboBoxItem Tag="1">Only Events</ComboBoxItem>
+                <ComboBoxItem Tag="2">Only Counters</ComboBoxItem>
+            </ComboBox>
             <Button x:Name="StopButton"  Width="24" Height="24" Click="StopButton_Click" ToolTip="Stop Profiling Session" Margin="1,0,0,0" Padding="-6" IsEnabled="False">
                 <ContentControl Style="{StaticResource appbar_control_stop}" Cursor="Hand" />
             </Button>

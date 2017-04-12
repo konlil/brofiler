@@ -58,8 +58,13 @@ public:
 	static uint32_t GetMessageType() { return id; }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define CAPTURE_ALL 0
+#define CAPTURE_ONLY_EVENTS 1
+#define CAPTURE_ONLY_COUNTERS 2
 struct StartMessage : public Message<IMessage::Start>
 {
+	int capture_type;
+	uint32_t capture_mask;
 	static IMessage* Create(InputDataStream&);
 	virtual void Apply() override;
 };
