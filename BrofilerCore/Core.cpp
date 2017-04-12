@@ -189,8 +189,8 @@ void Core::Update()
 		if (!frames.empty())
 		{
 			frames.back().Stop();
-			EventTime& time = frames.back();
-			Platform::Log("[Brofiler]Frame time: %f ms\n", (time.finish - time.start) / 1000.0);
+			//EventTime& time = frames.back();
+			//Platform::Log("[Brofiler]Frame time: %f ms\n", (time.finish - time.start) / 1000.0);
 		}
 
 		DumpCounters();

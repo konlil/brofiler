@@ -438,11 +438,11 @@ struct BROFILER_API CounterAPI
 #endif
 
 // Perf counter
-#define BROFILER_COUNTER_SET(name, v) static uint8_t s_perfcounter_##name_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
-									Brofiler::CounterAPI::SetCounter(s_perfcounter_##name_idx, v);
+#define BROFILER_COUNTER_SET(name, v) static uint8_t s_perfcounter_##name##_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
+									Brofiler::CounterAPI::SetCounter(s_perfcounter_##name##_idx, (double)(v));
 
-#define BROFILER_COUNTER_INC(name, v)   static uint8_t s_perfcounter_##name_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
-									Brofiler::CounterAPI::IncCounter(s_perfcounter_##name_idx, v);
+#define BROFILER_COUNTER_INC(name, v)   static uint8_t s_perfcounter_##name##_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
+									Brofiler::CounterAPI::IncCounter(s_perfcounter_##name##_idx, (double)(v));
 
 #define BROFILER_COUNTER_DEC(name, v)  BROFILER_COUNTER_INC(name, -v)
 
