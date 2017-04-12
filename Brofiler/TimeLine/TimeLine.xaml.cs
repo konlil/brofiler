@@ -51,6 +51,8 @@ namespace Profiler
 			}
 		}
 
+        public static RoutedCommand StartButtonMainCommand { get; set; }
+
         public TimeLine()
         {
             this.InitializeComponent();
@@ -59,6 +61,9 @@ namespace Profiler
             warningBlock.Visibility = Visibility.Collapsed;
 
             this.Loaded += new RoutedEventHandler(TimeLine_Loaded);
+
+            StartButtonMainCommand = new RoutedCommand();
+            CommandBindings.Add(new CommandBinding(StartButtonMainCommand, StartButtonMainExecuted));
 
             System.Net.IPAddress defaultIP;
             System.Net.IPAddress.TryParse(Properties.Settings.Default.DefaultIP, out defaultIP);
@@ -533,6 +538,20 @@ namespace Profiler
         private void ClearHooksButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             //ProfilerClient.Get().SendMessage(new SetupHookMessage(0, false));
+        }
+
+        public void StartButtonMainExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            System.Windows.MessageBox.Show("hello from UserControl1");
+        }
+
+        private void OnStartMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            var mi = e.OriginalSource as MenuItem;
+            if (mi == null) return;
+
+            var xmlAtt = mi.Tag as XmlAttribute;
+            if (xmlAtt != null) MessageBox.Show(xmlAtt.Value);
         }
 
         private void StopButton_Click(object sender, System.Windows.RoutedEventArgs e)

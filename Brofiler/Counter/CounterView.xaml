@@ -22,7 +22,7 @@
                         <ToggleButton x:Name="ShowCursor1" ToolTip="Show Cursor" Width="20" Height="20" Margin="0,0,3,0" Padding="-5" Click="ShowCursor1_Click">
                             <ContentControl Style="{StaticResource appbar_draw_marker}" />
                         </ToggleButton>
-                        <ComboBox x:Name="Combo1" Margin="0,0,10,0" SelectionChanged="Combo1_SelectionChanged" Width="100"></ComboBox>
+                        <ComboBox x:Name="Combo1" Margin="0,0,10,0" SelectionChanged="Combo1_SelectionChanged" Width="200"></ComboBox>
                     </StackPanel>
                     <d3:ChartPlotter x:Name="plotter1" LegendVisible="False" BorderThickness="1" BorderBrush="Black"  Margin="10,1,10,3">
                         <!--<d3:Header x:Name="HeaderName" Content="Simple Chart"/>-->
@@ -36,7 +36,7 @@
                         <ToggleButton x:Name="ShowCursor2" ToolTip="Show Cursor" Width="20" Height="20" Margin="0,0,3,0" Padding="-5" Click="ShowCursor2_Click">
                             <ContentControl Style="{StaticResource appbar_draw_marker}" />
                         </ToggleButton>
-                        <ComboBox x:Name="Combo2" Margin="0,0,10,0" SelectionChanged="Combo2_SelectionChanged" Width="100"></ComboBox>
+                        <ComboBox x:Name="Combo2" Margin="0,0,10,0" SelectionChanged="Combo2_SelectionChanged" Width="200"></ComboBox>
                     </StackPanel>
                     <d3:ChartPlotter x:Name="plotter2" LegendVisible="False" BorderThickness="1" BorderBrush="Black"  Margin="10,1,10,3">
                         <!--<d3:Header x:Name="HeaderName2" Content="Simple Chart"/>-->
