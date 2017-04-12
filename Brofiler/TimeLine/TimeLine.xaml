@@ -128,7 +128,7 @@
             <Button x:Name="SetGlbalCaptureMask" Click="GlobalCaptureMaskButton_Click" HorizontalAlignment="Left" Width="24" Height="24" VerticalAlignment="Center" ToolTip="Set global capture mask" Margin="1,0,0,0" Padding="-6">
                 <ContentControl Style="{StaticResource appbar_filter}" />
             </Button>
-            <TextBox x:Name="MaskText" Width="80" MouseDoubleClick="MaskText_DoubleClick" TextChanged="MaskText_TextChanged" ToolTip="Global capture mask" Text="0xFFFFFFFF" VerticalContentAlignment="Center" />
+            <TextBox x:Name="MaskText" Width="80" TextChanged="MaskText_TextChanged" ToolTip="Global capture mask" Text="0xFFFFFFFF" VerticalContentAlignment="Center" />
             <local:PlatformSelector x:Name="PlatformCombo" Margin="4,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

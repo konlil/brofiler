@@ -119,7 +119,7 @@ namespace Profiler
 
         private void ShowCursor2_Click(object sender, RoutedEventArgs e)
         {
-            bool clicked = ShowCursor1.IsChecked ?? false;
+            bool clicked = ShowCursor2.IsChecked ?? false;
             if (clicked)
                 plotter2.Children.Add(new CursorCoordinateGraph());
             else

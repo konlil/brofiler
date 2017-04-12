@@ -385,7 +385,7 @@ namespace Profiler
             }
         }
 
-        private void MaskText_DoubleClick(object sender, System.Windows.RoutedEventArgs e)
+        private void GlobalCaptureMaskButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             UInt32 old_mask = 0;
             ConvertText2Hex(MaskText.Text, out old_mask);
@@ -395,15 +395,6 @@ namespace Profiler
             settingDlg.ShowDialog();
             Console.WriteLine("mask: {0}", settingDlg.MaskValue);
             MaskText.Text = settingDlg.MaskString;
-        }
-
-        private void GlobalCaptureMaskButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            UInt32 mask = 0;
-            if (ConvertText2Hex(MaskText.Text, out mask))
-            {
-                ProfilerClient.Get().SendMessage(new GlobalCaptureMaskMessage(mask));
-            }
         }
 
         private void ClearHooksButton_Click(object sender, System.Windows.RoutedEventArgs e)
