@@ -54,13 +54,13 @@ OutputDataStream& operator << ( OutputDataStream& stream, const ScopeData& ob);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef MemoryPool<EventData, 1024> EventBuffer;
 typedef MemoryPool<const EventData*, 32> CategoryBuffer;
-typedef MemoryPool<SyncData, 1024> SynchronizationBuffer;
+//typedef MemoryPool<SyncData, 1024> SynchronizationBuffer;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct EventStorage
 {
 	EventBuffer eventBuffer;
 	CategoryBuffer categoryBuffer; 
-	SynchronizationBuffer synchronizationBuffer;
+	//SynchronizationBuffer synchronizationBuffer;
 
 	//TODO: sampling is deprecated..
 	Platform::Atomic<uint32_t> isSampling;
@@ -82,7 +82,7 @@ struct EventStorage
 	{
 		eventBuffer.Clear(preserveContent);
 		categoryBuffer.Clear(preserveContent);
-		synchronizationBuffer.Clear(preserveContent);
+		//synchronizationBuffer.Clear(preserveContent);
 	}
 
 	void Reset()

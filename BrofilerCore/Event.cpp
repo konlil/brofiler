@@ -94,10 +94,10 @@ OutputDataStream& operator<<(OutputDataStream& stream, const EventData& ob)
 	return stream << (EventTime)(ob) << ob.description->index;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OutputDataStream& operator<<(OutputDataStream& stream, const SyncData& ob)
-{
-	return stream << (EventTime)(ob) << ob.core << ob.reason << ob.newThreadId;
-}
+//OutputDataStream& operator<<(OutputDataStream& stream, const SyncData& ob)
+//{
+//	return stream << (EventTime)(ob) << ob.core << ob.reason << ob.newThreadId;
+//}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Category::Category( const EventDescription& description) : Event(description)
 {

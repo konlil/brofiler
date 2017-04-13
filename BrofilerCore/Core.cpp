@@ -92,14 +92,14 @@ void Core::DumpThread(const ThreadEntry& entry, const EventTime& timeSlice, Scop
 	// Events
 	DumpEvents(entry.storage, timeSlice, scope);
 
-	if (!entry.storage.synchronizationBuffer.IsEmpty())
+	/*if (!entry.storage.synchronizationBuffer.IsEmpty())
 	{
 		OutputDataStream synchronizationStream;
 		synchronizationStream << scope.header.boardNumber;
 		synchronizationStream << scope.header.threadNumber;
 		synchronizationStream << entry.storage.synchronizationBuffer;
 		Server::Get().Send(DataResponse::Synchronization, synchronizationStream);
-	}
+	}*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
