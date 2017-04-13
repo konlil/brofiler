@@ -385,16 +385,24 @@ namespace Profiler
             }
         }
 
+        private int capture_filter_thresh = 0;
+
         private void GlobalCaptureMaskButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             UInt32 old_mask = 0;
             ConvertText2Hex(MaskText.Text, out old_mask);
 
             Profiler.MaskSetting settingDlg = new Profiler.MaskSetting();
+            settingDlg.Owner = Application.Current.MainWindow; // We must also set the owner for this to work.
+            settingDlg.WindowStartupLocation = WindowStartupLocation.Manual;
+            settingDlg.Top = Application.Current.MainWindow.Top + 60;
+            settingDlg.Left = Application.Current.MainWindow.Left + 200;
             settingDlg.MaskValue = old_mask;
+            settingDlg.FilterThresh = capture_filter_thresh;
             settingDlg.ShowDialog();
             Console.WriteLine("mask: {0}", settingDlg.MaskValue);
             MaskText.Text = settingDlg.MaskString;
+            capture_filter_thresh = settingDlg.FilterThresh;
         }
 
         private void ClearHooksButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -434,7 +442,7 @@ namespace Profiler
             int capture_type = StartComboBox.SelectedIndex;
             UInt32 capture_mask = GetCurrentCaptureMask();
 
-            StartMessage message = new StartMessage(capture_type, capture_mask);
+            StartMessage message = new StartMessage(capture_type, capture_mask, capture_filter_thresh);
             if (ProfilerClient.Get().SendMessage(message))
             {
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>

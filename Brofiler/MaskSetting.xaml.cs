@@ -20,6 +20,7 @@ namespace Profiler
     public partial class MaskSetting : Window
     {
         private UInt32 mask_value = 0;
+        private int filter_thresh = 0;
 
         public MaskSetting()
         {
@@ -30,6 +31,12 @@ namespace Profiler
         {
             get { return mask_value; }
             set { mask_value = value; }
+        }
+
+        public int FilterThresh
+        {
+            get { return filter_thresh; }
+            set { filter_thresh = value; }
         }
 
         public string MaskString
@@ -107,6 +114,22 @@ namespace Profiler
                 {
                     box.IsChecked = false;
                 }
+            }
+
+            filterThreshText.Text = filter_thresh.ToString();
+        }
+
+        private void filterThreshText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int value = 0;
+            if (int.TryParse(filterThreshText.Text, out value))
+            {
+                filter_thresh = value;
+            }
+            else
+            {
+                filter_thresh = 0;
+                filterThreshText.Text = "0";
             }
         }
     }

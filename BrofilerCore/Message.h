@@ -65,6 +65,7 @@ struct StartMessage : public Message<IMessage::Start>
 {
 	int capture_type;
 	uint32_t capture_mask;
+	int filter_thresh;
 	static IMessage* Create(InputDataStream&);
 	virtual void Apply() override;
 };

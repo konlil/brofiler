@@ -108,6 +108,7 @@ void StartMessage::Apply()
 {
 	Core::Get().Activate(capture_type == 0 || capture_type == 1);
 	Core::Get().ActivateCounters(capture_type == 0 || capture_type == 2);
+	Core::Get().SetFilterThreshold(filter_thresh);
 	EventDescription::SetGlobalCaptureMask(capture_mask);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +117,7 @@ IMessage* StartMessage::Create(InputDataStream& stream)
 	StartMessage* msg = new StartMessage();
 	stream >> msg->capture_type;
 	stream >> msg->capture_mask;
+	stream >> msg->filter_thresh;
 	return msg;
 }
 

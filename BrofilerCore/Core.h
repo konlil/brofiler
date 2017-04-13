@@ -146,13 +146,10 @@ class Core
 
 	std::vector<EventTime> frames;
 
-	uint32_t capture_mask;
-
 	uint64_t frame_id_started;
 	uint64_t frame_id;
 
-	//CallstackCollector callstackCollector;
-	//SysCallCollector syscallCollector;
+	int filter_threshold;	// filter threshold (ms)
 
 	void UpdateEvents();
 	void Update();
@@ -219,6 +216,9 @@ public:
 
 	// Main Update Function
 	static void NextFrame() { Get().Update(); }
+
+	// Set Filter Threshold
+	void BRO_INLINE SetFilterThreshold(int v) { filter_threshold = v; }
 
 	// Get Active ThreadID
 	//static BRO_INLINE uint32 GetThreadID() { return Get().mainThreadID; }

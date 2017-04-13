@@ -171,7 +171,9 @@ void Core::CleanupThreads()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Core::Core() : progressReportedLastTimestampMS(0), isActive(false), isCounterActive(false), capture_mask(0xFFFFFFFF), frame_id(0)
+Core::Core() : progressReportedLastTimestampMS(0), 
+	isActive(false), isCounterActive(false), frame_id(0),
+	filter_threshold(0)
 {
 }
 
@@ -189,6 +191,7 @@ void Core::Update()
 		DumpCounters();
 	}
 	
+	//bool filtered = false;
 	if (isActive)
 	{
 		if (!frames.empty())

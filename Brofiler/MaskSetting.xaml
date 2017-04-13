@@ -1,12 +1,13 @@
 ﻿<Window x:Class="Profiler.MaskSetting"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Set Capture Mask" Height="194" Width="400" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" Loaded="Window_Loaded">
+        Title="Capture Setting" Height="194" Width="400" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid ShowGridLines="False" Grid.Row="0" Margin="3">
             <Grid.RowDefinitions>
@@ -61,11 +62,18 @@
             <CheckBox Tag="30" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="6">30</CheckBox>
             <CheckBox Tag="31" Checked="Button_Check" Unchecked="Button_UnCheck" Grid.Row="3" Grid.Column="7">31</CheckBox>
         </Grid>
-        <Label x:Name="maskValueText" Content="Mask Value: 0" Grid.Row="1"></Label>
-        <StackPanel Grid.Row ="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="checkAllButton" Click="CheckAllButton_Click" Content="Check All" Margin="20,0,0,0" Width="77"></Button>
-            <Button x:Name="uncheckAllButton" Click="UncheckAllButton_Click" Content="UnCheck All" Margin="20,0,0,0" Width="94"></Button>
-            <Button x:Name="confirmButton" Click="ConfirmButton_Click" Content="OK" Margin="20,0,0,0" Width="83"></Button>
+        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch">
+            <Label x:Name="maskValueText" HorizontalAlignment="Left" Content="Mask Value: 0x00000000"></Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="checkAllButton" Click="CheckAllButton_Click" Content="Check All" Width="77" Height="20" Margin="5,0,5,0"></Button>
+                <Button x:Name="uncheckAllButton" Click="UncheckAllButton_Click" Content="UnCheck All" Width="94" Height="20" Margin="5,0,5,0"/>
+            </StackPanel>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Label>Filter Threshold:</Label>
+            <TextBox x:Name="filterThreshText" TextChanged="filterThreshText_TextChanged" VerticalAlignment="Top" Margin="5" Width="100" IsEnabled="False">0</TextBox>
+            <Label>ms</Label>
         </StackPanel>
+        <Button x:Name="confirmButton" Grid.Row="3" VerticalAlignment="Bottom" Click="ConfirmButton_Click" Content="OK" Margin="0,0,0,10" Width="83" Height="25"></Button>
     </Grid>
 </Window>

@@ -158,10 +158,12 @@ namespace Profiler
     {
         private int capture_type;
         private UInt32 capture_mask;
-        public StartMessage(int type, UInt32 mask)
+        private int capture_thresh;
+        public StartMessage(int type, UInt32 mask, int thresh)
         {
             this.capture_mask = mask;
             this.capture_type = type;
+            this.capture_thresh = thresh;
         }
 
         public override Int32 GetMessageType()
@@ -174,6 +176,7 @@ namespace Profiler
             base.Write(writer);
             writer.Write(capture_type);
             writer.Write(capture_mask);
+            writer.Write(capture_thresh);
         }
     }
 
