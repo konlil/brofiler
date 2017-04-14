@@ -10,20 +10,37 @@ namespace Brofiler
 
 	CounterMgr::~CounterMgr()
 	{
-
+		for (size_t i = 0; i < counters.size(); i++)
+		{
+			delete counters[i];
+		}
+		counters.clear();
 	}
 
-	uint8_t CounterMgr::GetCounterIndex(std::string name)
+	uint8_t CounterMgr::DeclCounter(const std::string& name, double vmin, double vmax)
 	{
 		Platform::ScopedGuard guard(lock);
 		if (counter_ids.find(name) == counter_ids.end())
 		{
-			Counter* c = new Counter(name, 0);
+			counter_ids[name] = counters.size();
+			if (new_counter_idx_since_last_dump < 0)
+				new_counter_idx_since_last_dump = counters.size();
+
+			counters.push_back(new Counter(name, vmin, vmax));
+		}
+		return counter_ids[name];
+	}
+
+	uint8_t CounterMgr::GetCounterIndex(const std::string& name)
+	{
+		Platform::ScopedGuard guard(lock);
+		if (counter_ids.find(name) == counter_ids.end())
+		{
 			counter_ids[name] = counters.size();
 			if(new_counter_idx_since_last_dump < 0)
 				new_counter_idx_since_last_dump = counters.size();
 
-			counters.push_back(c);
+			counters.push_back(new Counter(name));
 		}
 		return counter_ids[name];
 	}
@@ -68,6 +85,8 @@ namespace Brofiler
 			{
 				const Counter* c = counters[i];
 				stream << c->name;
+				stream << c->min_value;
+				stream << c->max_value;
 				stream << i;
 			}
 
@@ -85,6 +104,10 @@ namespace Brofiler
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+	uint8_t CounterAPI::DeclCounter(const char* name, double vmin, double vmax)
+	{
+		return Brofiler::CounterMgr::Get().DeclCounter(name, vmin, vmax);
+	}
 	uint8_t CounterAPI::GetCounterIndex(const char* name)
 	{
 		return Brofiler::CounterMgr::Get().GetCounterIndex(name);

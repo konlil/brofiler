@@ -39,11 +39,11 @@ namespace Profiler
         {
             InitializeComponent();
 
-            Combo1.ItemsSource = counters.CounterNames;
-            Combo2.ItemsSource = counters.CounterNames;
-            Combo1.DisplayMemberPath = "name";
+            Combo1.ItemsSource = counters.CounterDecls;
+            Combo2.ItemsSource = counters.CounterDecls;
+            //Combo1.DisplayMemberPath = "name";
             Combo1.SelectedValuePath = "id";
-            Combo2.DisplayMemberPath = "name";
+            //Combo2.DisplayMemberPath = "name";
             Combo2.SelectedValuePath = "id";
         }
 
@@ -69,7 +69,7 @@ namespace Profiler
         {
             ComboBox cmb = sender as ComboBox;
             uint id = (uint)(cmb.SelectedValue);
-            CounterNameIDPair item = (CounterNameIDPair)(cmb.SelectedItem);
+            CounterDeclaration item = (CounterDeclaration)(cmb.SelectedItem);
 
             dataSource1 = new EnumerableDataSource<CounterPoint>(counters.GetCounterArray(id));
             dataSource1.SetXMapping(x => x.Id);
@@ -90,7 +90,7 @@ namespace Profiler
         {
             ComboBox cmb = sender as ComboBox;
             uint id = (uint)(cmb.SelectedValue);
-            CounterNameIDPair item = (CounterNameIDPair)(cmb.SelectedItem);
+            CounterDeclaration item = (CounterDeclaration)(cmb.SelectedItem);
 
             dataSource2 = new EnumerableDataSource<CounterPoint>(counters.GetCounterArray(id));
             dataSource2.SetXMapping(x => x.Id);

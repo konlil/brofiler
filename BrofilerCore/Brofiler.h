@@ -311,6 +311,7 @@ struct ThreadScope
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct BROFILER_API CounterAPI
 {
+	static uint8_t DeclCounter(const char* name, double vmin, double vmax);
 	static uint8_t GetCounterIndex(const char* name);
 	static void SetCounter(uint8_t idx, double v);
 	static void IncCounter(uint8_t idx, double v);
@@ -438,6 +439,8 @@ struct BROFILER_API CounterAPI
 #endif
 
 // Perf counter
+#define BROFILER_COUNTER_DECL(name, vmin, vmax)  Brofiler::CounterAPI::DeclCounter(#name, vmin, vmax);
+
 #define BROFILER_COUNTER_SET(name, v) static uint8_t s_perfcounter_##name##_idx = Brofiler::CounterAPI::GetCounterIndex(#name); \
 									Brofiler::CounterAPI::SetCounter(s_perfcounter_##name##_idx, (double)(v));
 

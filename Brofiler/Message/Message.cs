@@ -207,7 +207,8 @@ namespace Profiler
             base.Write(writer);
             writer.Write(capture_mask);
         }
-    }
+    }
+
 
     class SetupHookMessage : Message
     {

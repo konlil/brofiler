@@ -159,6 +159,8 @@ Engine::Engine() : isAlive(true)
 	{
 		workers[i] = new std::thread(std::bind(&WorkerThread, this));
 	}
+
+	BROFILER_COUNTER_DECL(FrameTime, 0, 15);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Engine::~Engine()

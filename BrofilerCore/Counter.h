@@ -13,8 +13,13 @@ namespace Brofiler
 {
 	struct Counter
 	{
-		Counter(std::string& n, double v) : name(n), value(v) {}
+		Counter(const std::string& n) :
+			name(n), min_value(-DBL_MAX), max_value(DBL_MAX) {}
+		Counter(const std::string& n, double vmin, double vmax) : 
+			name(n), min_value(vmin), max_value(vmax) {}
 		std::string name;
+		double min_value;
+		double max_value;
 		double value;
 	};
 
@@ -34,7 +39,8 @@ namespace Brofiler
 	public:
 		static BRO_INLINE CounterMgr& Get() { return Singleton<CounterMgr>::instance(); }
 
-		uint8_t GetCounterIndex(std::string name);
+		uint8_t DeclCounter(const std::string& name, double vmin, double vmax);
+		uint8_t GetCounterIndex(const std::string& name);
 		void Set(uint8_t idx, double v);
 		void IncAt(uint8_t idx, double v);
 		void Reset(uint8_t idx);
