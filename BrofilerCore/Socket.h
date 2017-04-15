@@ -220,7 +220,7 @@ namespace Brofiler
 			if (!IsValidSocket(acceptSocket))
 				return false;
 
-			int send_rtn = ::send(acceptSocket, buf, (int)len, 0);
+			long send_rtn = ::send(acceptSocket, buf, (int)len, 0);
 			if ( send_rtn == SOCKET_ERROR)
 			{
 				Disconnect();
@@ -250,7 +250,7 @@ namespace Brofiler
 #error Platform not supported
 #endif
 			{
-				return ::recv(acceptSocket, buf, len, 0);
+				return (int)::recv(acceptSocket, buf, len, 0);
 			}
 
 			return 0;

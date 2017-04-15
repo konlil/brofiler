@@ -80,20 +80,20 @@ namespace Brofiler
 		stream << has_new_counter;
 		if (has_new_counter > 0)
 		{
-			stream << (counters.size() - new_counter_idx_since_last_dump);
+			stream << (unsigned int)(counters.size() - new_counter_idx_since_last_dump);
 			for (size_t i = new_counter_idx_since_last_dump; i < counters.size(); i++)
 			{
 				const Counter* c = counters[i];
 				stream << c->name;
 				stream << c->min_value;
 				stream << c->max_value;
-				stream << i;
+				stream << (unsigned int)i;
 			}
 
 			new_counter_idx_since_last_dump = -1;
 		}
 
-		stream << counters.size();
+		stream << (unsigned int)counters.size();
 		for (int i = 0; i < counters.size(); i++)
 		{
 			const Counter* c = counters[i];

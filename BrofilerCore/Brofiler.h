@@ -264,7 +264,7 @@ struct BROFILER_API EventDescription
 
 	static bool IsValidMask(uint32_t mask);
 	static void SetGlobalCaptureMask(uint32_t global_mask);
-	static EventDescription* Create(uint32_t mask, const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor = Color::Null);
+	static EventDescription* Create(uint32_t mask, const char* eventName, const char* fileName, const uint32_t fileLine, const uint32_t eventColor = Color::Null);
 private:
 	friend class EventDescriptionBoard;
 	EventDescription();

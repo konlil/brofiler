@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <vector>
+#include <float.h>
 #include "Brofiler.h"
 #include "Singleton.h"
 

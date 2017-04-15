@@ -41,7 +41,7 @@ void OutputLog(const char* head, const char* msg)
 #if defined( BF_PLATFORM_WINDOWS )
 #define OUTPUT(str) ::OutputDebugString(str)
 #else
-#define OUTPUT(str) printf(str)
+#define OUTPUT(str) printf("%s", str)
 #endif
 
 	if (head && ::strcmp(head, "") != 0)

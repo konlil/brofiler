@@ -172,7 +172,7 @@ void Core::CleanupThreads()
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Core::Core() : progressReportedLastTimestampMS(0), 
-	isActive(false), isCounterActive(false), frame_id(0),
+	frame_id(0), isActive(false), isCounterActive(false),
 	filter_threshold(0)
 {
 }

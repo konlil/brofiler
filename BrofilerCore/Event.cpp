@@ -22,7 +22,7 @@ bool EventDescription::IsValidMask(uint32_t mask)
 	return (EventDescription::s_capture_mask == 0) || (EventDescription::s_capture_mask & mask) == mask;
 }
 
-EventDescription* EventDescription::Create(uint32_t mask, const char* eventName, const char* fileName, const unsigned long fileLine, const unsigned long eventColor /*= Color::Null*/)
+EventDescription* EventDescription::Create(uint32_t mask, const char* eventName, const char* fileName, const uint32_t fileLine, const uint32_t eventColor /*= Color::Null*/)
 {
 	Platform::ScopedGuard guard(g_lock);
 

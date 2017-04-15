@@ -30,7 +30,7 @@ EventDescription* EventDescriptionBoard::CreateDescription()
 {
 	Platform::ScopedGuard guard(g_lock);
 	EventDescription* desc = new EventDescription();
-	desc->index = (unsigned long)board.size();
+	desc->index = (uint32_t)board.size();
 	board.push_back(desc);
 	return desc;
 }
