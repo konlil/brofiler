@@ -16,5 +16,16 @@
   &lt;string&gt;Linux, Linux, 192.168.45.101&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="MaskDefinitions" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;0, FRAME&lt;/string&gt;
+  &lt;string&gt;1, UPDATE&lt;/string&gt;
+  &lt;string&gt;2, RENDER&lt;/string&gt;
+  &lt;string&gt;3, PHYSICS&lt;/string&gt;
+  &lt;string&gt;4, NETWORK&lt;/string&gt;
+  &lt;string&gt;5, AUDIO&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

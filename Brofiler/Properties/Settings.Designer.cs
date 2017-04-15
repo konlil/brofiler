@@ -63,5 +63,25 @@ namespace Profiler.Properties {
                 this["Targets"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>0, FRAME</string>
+  <string>1, UPDATE</string>
+  <string>2, RENDER</string>
+  <string>3, PHYSICS</string>
+  <string>4, NETWORK</string>
+  <string>5, AUDIO</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection MaskDefinitions {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["MaskDefinitions"]));
+            }
+            set {
+                this["MaskDefinitions"] = value;
+            }
+        }
     }
 }

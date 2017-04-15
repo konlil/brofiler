@@ -127,6 +127,9 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="AurelienRibon.Ui.SyntaxHighlightBox">
+      <HintPath>.\AurelienRibon.Ui.SyntaxHighlightBox.dll</HintPath>
+    </Reference>
     <Reference Include="DynamicDataDisplay">
       <HintPath>D3\DynamicDataDisplay.dll</HintPath>
     </Reference>

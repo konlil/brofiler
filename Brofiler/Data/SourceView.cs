@@ -96,11 +96,11 @@ namespace Profiler.Data
             Lines = new Dictionary<int, SourceLine>();
 
             IEnumerable<TItem> boardItems = board.Where(boardItem =>
-      {
-          return (boardItem.Description != null &&
-                  boardItem.Description.Path != null &&
-                                  boardItem.Description.Path.File == path.File);
-      });
+              {
+                  return (boardItem.Description != null &&
+                          boardItem.Description.Path != null &&
+                          boardItem.Description.Path.File == path.File);
+              });
 
             foreach (TItem item in boardItems)
             {

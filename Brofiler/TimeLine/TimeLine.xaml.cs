@@ -401,7 +401,7 @@ namespace Profiler
             settingDlg.FilterThresh = capture_filter_thresh;
             settingDlg.ShowDialog();
             Console.WriteLine("mask: {0}", settingDlg.MaskValue);
-            MaskText.Text = settingDlg.MaskString;
+            MaskText.Text = String.Format("0x{0:X8}", settingDlg.MaskValue);
             capture_filter_thresh = settingDlg.FilterThresh;
         }
 
