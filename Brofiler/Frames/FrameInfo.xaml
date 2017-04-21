@@ -2,7 +2,7 @@
 	xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
 	xmlns:Custom="http://schemas.microsoft.com/wpf/2008/toolkit"
 	x:Class="Profiler.FrameInfo"
-	x:Name="UserControl" mc:Ignorable="d" MaxHeight="1000" Height="538"
+	x:Name="UserControl" mc:Ignorable="d" MaxHeight="500" Height="300" Margin="0,0,0,10"
 	TextOptions.TextFormattingMode="Display"
     d:DesignWidth="778" Width="778">
     <UserControl.Resources>
@@ -78,7 +78,7 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <TreeView Grid.Row="1" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling" x:Name="EventTreeView" DataContext="{Binding Root}" ItemsSource="{Binding Children}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="0" >
+        <TreeView Grid.Row="1" MaxHeight="500" VerticalAlignment="Stretch" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling" x:Name="EventTreeView" DataContext="{Binding Root}" ItemsSource="{Binding Children}" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type Profiler_Data:BaseTreeNode}" ItemsSource="{Binding Children}">
                     <Grid ShowGridLines="False" Width="Auto" Margin="1">
