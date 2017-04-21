@@ -133,7 +133,6 @@ struct CaptureStatus
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 class Core
 {
 	Platform::Mutex lock;
@@ -148,6 +147,9 @@ class Core
 
 	uint64_t frame_id_started;
 	uint64_t frame_id;
+
+	EventData* frame_event_data;
+	EventDescription* frame_event_desc;
 
 	int filter_threshold;	// filter threshold (ms)
 
@@ -169,7 +171,7 @@ class Core
 
 	void CleanupThreads();
 public:
-	void Init();
+	void Init(const char* main_thread_name);
 
 	void Activate(bool active);
 	bool isActive;
@@ -215,7 +217,8 @@ public:
 	static BRO_INLINE Core& Get() { return Singleton<Core>::instance(); }
 
 	// Main Update Function
-	static void NextFrame() { Get().Update(); }
+	void BeginFrame();
+	void EndFrame();
 
 	// Set Filter Threshold
 	void BRO_INLINE SetFilterThreshold(int v) { filter_threshold = v; }

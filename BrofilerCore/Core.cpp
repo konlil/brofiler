@@ -55,20 +55,21 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 	{
 		const EventData* rootEvent = nullptr;
 
-		//Platform::Log("[Brofiler]DumpEvents ------------ %d \n", entry.eventBuffer.Size());
+		Platform::Log("[Brofiler]DumpEvents ------------ %d \n", entry.eventBuffer.Size());
 		entry.eventBuffer.ForEach([&](const EventData& data)
 		{
-			//Platform::Log("[Brofiler]DumpEvents, duration: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
+			Platform::Log("[Brofiler]DumpEvents, duration: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 			if (data.finish >= data.start && data.start >= timeSlice.start && timeSlice.finish >= data.finish)
 			{
 				if (!rootEvent)
 				{
+					Platform::Log("[Brofiler]DumpEvents, --- init root: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 					rootEvent = &data;
 					scope.InitRootEvent(*rootEvent);
 				} 
 				else if (rootEvent->finish < data.finish)
 				{
-					//Platform::Log("[Brofiler]DumpEvents, --- change root: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
+					Platform::Log("[Brofiler]DumpEvents, --- change root: %f ms, %lld, %lld, %s \n", data.Duration(), data.start, data.finish, data.description->name);
 					scope.Send();
 
 					rootEvent = &data;
@@ -81,7 +82,7 @@ void Core::DumpEvents(const EventStorage& entry, const EventTime& timeSlice, Sco
 			}
 		});
 
-		//Platform::Log("[Brofiler]DumpEvents, header duration: %f ms\n", rootEvent->Duration());
+		Platform::Log("[Brofiler]DumpEvents, header duration: %f ms\n", rootEvent->Duration());
 		scope.Send();
 	}
 }
@@ -173,15 +174,35 @@ void Core::CleanupThreads()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Core::Core() : progressReportedLastTimestampMS(0), 
 	frame_id(0), isActive(false), isCounterActive(false),
-	filter_threshold(0)
+	filter_threshold(0), frame_event_data(nullptr)
 {
 }
 
-void Core::Init()
+void Core::Init(const char* main_thread_name)
 {
 	mainThreadID = Platform::Thread::CurrentThreadID();
+	RegisterThread(ThreadDescription(main_thread_name, mainThreadID, false));
+	frame_event_desc = EventDescription::Create(0, "Frame", "", 0);
+	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Core::BeginFrame()
+{
+}
+
+void Core::EndFrame()
+{
+	if (frame_event_data) {
+		Event::Stop(*frame_event_data);
+		//Platform::Log("[Brofiler]EndFrame: %lld, %lld, %f\n", frame_event_data->start, frame_event_data->finish,
+		//	(frame_event_data->finish - frame_event_data->start) / 1000.0f);
+	}
+	frame_event_data = Event::Start(*frame_event_desc);
+	
+	// Main Update
+	Update();
+}
+
 void Core::Update()
 {
 	Platform::ScopedGuard guard(lock);
@@ -197,8 +218,8 @@ void Core::Update()
 		if (!frames.empty())
 		{
 			frames.back().Stop();
-			//EventTime& time = frames.back();
-			//Platform::Log("[Brofiler]Frame time: %f ms\n", (time.finish - time.start) / 1000.0);
+			EventTime& time = frames.back();
+			Platform::Log("[Brofiler]Frame time: %lld, %lld, %f ms\n", time.start, time.finish, (time.finish - time.start) / 1000.0);
 		}
 	}
 	
@@ -357,12 +378,14 @@ Core::~Core()
 {
 	Platform::ScopedGuard guard(lock);
 
+	UnRegisterThread(mainThreadID);
 	for (ThreadList::iterator it = threads.begin(); it != threads.end(); ++it)
 	{
 		(*it)->~ThreadEntry();
 		Platform::Memory::Free((*it));
 	}
 	threads.clear();
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const std::vector<ThreadEntry*>& Core::GetThreads() const
@@ -402,14 +425,18 @@ OutputDataStream& operator<<(OutputDataStream& stream, const ThreadEntry* entry)
 	return stream << entry->description;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BROFILER_API void Init()
+BROFILER_API void Init(const char* name)
 {
-	return Core::Get().Init();
+	return Core::Get().Init(name);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BROFILER_API void NextFrame()
+BROFILER_API void BeginFrame()
 {
-	return Core::NextFrame();
+	return Core::Get().BeginFrame();
+}
+BROFILER_API void EndFrame()
+{
+	return Core::Get().EndFrame();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API bool IsActive()

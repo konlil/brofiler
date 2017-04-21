@@ -23,6 +23,7 @@ int main()
 {
 	cout << "Starting profiler test." << endl;
 
+	BROFILER_INIT("MainThread");
 	Test::Engine engine;
 	cout << "Engine successfully created." << endl;
 
@@ -30,12 +31,12 @@ int main()
 
 	while( true ) 
 	{
-		BROFILER_FRAME("MainThread");
+		BROFILER_FRAME();
 		
 		if (!engine.Frame())
 			break;
 
-		cout<<'.'; 
+		cout<<'.';
 	}
 
 	return 0;

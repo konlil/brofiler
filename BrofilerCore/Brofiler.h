@@ -207,10 +207,11 @@ namespace Brofiler
 
 namespace Brofiler
 {
-BROFILER_API void Init();
+BROFILER_API void Init(const char* name);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BROFILER_API int64_t GetHighPrecisionTime();
-BROFILER_API void NextFrame();
+BROFILER_API void BeginFrame();
+BROFILER_API void EndFrame();
 BROFILER_API bool IsActive();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct EventStorage;
@@ -333,7 +334,7 @@ struct BROFILER_API CounterAPI
 #define BROFILER_MASK_RESERVED_COUNT 10
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define BROFILER_INIT() ::Brofiler::Init()
+#define BROFILER_INIT(NAME) ::Brofiler::Init(NAME)
 
 #define BROFILER_SET_CAPTURE_MASK(MASK) ::Brofiler::EventDescription::SetGlobalCaptureMask(MASK);
 
@@ -353,11 +354,8 @@ struct BROFILER_API CounterAPI
 
 #define BROFILER_CATEGORY(NAME, COLOR) BROFILER_CATEGORY_WITH_MASK(0, NAME, COLOR)
 
-#define BROFILER_FRAME(FRAME_NAME)  static ::Brofiler::ThreadScope mainThreadScope(FRAME_NAME);	\
-									BRO_UNUSED(mainThreadScope);								\
-									Brofiler::NextFrame();										\
-									BROFILER_EVENT("Frame")										\
-
+#define BROFILER_FRAME()	::Brofiler::EndFrame()
+							 
 #define BROFILER_THREAD(FRAME_NAME) ::Brofiler::ThreadScope brofilerThreadScope(FRAME_NAME); \
 									BRO_UNUSED(brofilerThreadScope);						 \
 
