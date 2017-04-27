@@ -34,10 +34,13 @@ void Server::Update()
 		networkStream.Append(buffer, length);
 	}
 
-	while (IMessage *message = IMessage::Create(networkStream))
+	if (networkStream.Length() > 0)
 	{
-		message->Apply();
-		delete message;
+		while (IMessage *message = IMessage::Create(networkStream))
+		{
+			message->Apply();
+			delete message;
+		}
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
